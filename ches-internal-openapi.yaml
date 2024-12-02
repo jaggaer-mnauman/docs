@@ -1695,7 +1695,7 @@ paths:
         required: true
         schema:
           type: string
-      - name: userId
+      - name: username
         in: path
         description: ASO/J1 username
         required: true
