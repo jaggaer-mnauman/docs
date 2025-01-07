@@ -2470,29 +2470,77 @@ paths:
 components:
   schemas:
     BuyerUser:
+      required:
+      - active
+      - eventsRole
+      - j1UserId
+      - name
+      - ratesRole
+      - username
       type: object
       properties:
         userId:
           type: integer
-          format: int64
+          description: ASO User ID of user
+          format: int32
+          example: 12345
         j1UserId:
+          maxLength: 255
           type: string
+          description: J1 User ID of user
+          example: abcd1234-01
         username:
+          maxLength: 100
           type: string
+          description: Username of user
+          example: user123@domain.com
         name:
+          maxLength: 100
           type: string
+          description: Full name of user
+          example: Thomas P. User
         type:
           type: string
+          description: Type of user
           readOnly: true
+          example: unlocked
+          enum:
+          - supplier
         status:
           type: string
+          description: Status of user
           readOnly: true
+          example: unlocked
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
         active:
           type: boolean
+          description: User active flag
+          example: true
         eventsRole:
           type: string
+          description: RFX and auction events role
+          readOnly: true
+          example: Event Creator
+          enum:
+          - Event Creator
+          - My Company Admin
+          - Template Manager
+          - Read Only
         ratesRole:
           type: string
+          description: Rate Manager rate structure role
+          readOnly: true
+          example: Rate Structure Creator
+          enum:
+          - Rate Structure Creator
+          - My Company Admin
+          - Template Manager
+          - Read Only
     RequestResponse:
       type: object
       properties:
@@ -2579,25 +2627,56 @@ components:
           format: date-time
           readOnly: true
     SupplierUser:
+      required:
+      - active
+      - j1UserId
+      - name
+      - username
       type: object
       properties:
         userId:
           type: integer
-          format: int64
+          description: ASO User ID of user
+          format: int32
+          example: 12345
         j1UserId:
+          maxLength: 255
           type: string
+          description: J1 User ID of user
+          example: abcd1234-01
         username:
+          maxLength: 100
           type: string
+          description: Username of user
+          example: user123@domain.com
         name:
+          maxLength: 100
           type: string
+          description: Full name of user
+          example: Thomas P. User
         type:
           type: string
+          description: Type of user
           readOnly: true
+          example: unlocked
+          enum:
+          - admin
+          - buyer
         status:
           type: string
+          description: Status of user
           readOnly: true
+          example: unlocked
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
         active:
           type: boolean
+          description: User active flag
+          example: true
     ApiCustomerHost:
       type: object
       properties:
