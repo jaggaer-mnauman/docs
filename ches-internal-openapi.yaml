@@ -2483,6 +2483,7 @@ components:
           type: integer
           description: ASO User ID of user
           format: int32
+          readOnly: true
           example: 12345
         j1UserId:
           maxLength: 255
@@ -2503,9 +2504,10 @@ components:
           type: string
           description: Type of user
           readOnly: true
-          example: unlocked
+          example: buyer
           enum:
-          - supplier
+          - admin
+          - buyer
         status:
           type: string
           description: Status of user
@@ -2549,81 +2551,189 @@ components:
           additionalProperties:
             uniqueItems: true
             type: array
+            description: Response object that can return one or more status codes
+            readOnly: true
+            example:
+              statuses:
+                USER_ALREADY_EXISTS:
+                - j1UserId: 00000000-47
+                  tenant: "99999999009"
+                MISSING_REQUIRED_FIELD:
+                - field: username
             items:
               type: object
               additionalProperties:
                 type: string
+                description: Response object that can return one or more status codes
+                readOnly: true
+                example: "{\"statuses\":{\"USER_ALREADY_EXISTS\":[{\"j1UserId\":\"\
+                  00000000-47\",\"tenant\":\"99999999009\"}],\"MISSING_REQUIRED_FIELD\"\
+                  :[{\"field\":\"username\"}]}}"
+              description: Response object that can return one or more status codes
+              readOnly: true
+              example:
+                statuses:
+                  USER_ALREADY_EXISTS:
+                  - j1UserId: 00000000-47
+                    tenant: "99999999009"
+                  MISSING_REQUIRED_FIELD:
+                  - field: username
+          description: Response object that can return one or more status codes
+          readOnly: true
+          example:
+            statuses:
+              USER_ALREADY_EXISTS:
+              - j1UserId: 00000000-47
+                tenant: "99999999009"
+              MISSING_REQUIRED_FIELD:
+              - field: username
     SupplierProject:
       type: object
       properties:
         eventId:
           type: integer
+          description: ASO event ID
           format: int32
+          readOnly: true
+          example: 123456
         customerHostId:
           type: integer
-          format: int64
+          description: ASO customer host ID
+          format: int32
           readOnly: true
+          example: 123
         name:
+          maxLength: 255
           type: string
+          description: Event name
+          example: Event Name
         status:
           type: string
-        uriName:
-          type: string
+          description: Type of user
           readOnly: true
+          example: Bid Site Available
+          enum:
+          - Bid Site Available
+        uriName:
+          maxLength: 100
+          type: string
+          description: Event URI name
+          readOnly: true
+          example: evt123456
         url:
           type: string
+          description: Event URL
           readOnly: true
+          example: https://qa.dev-aso-next.combinenet.com/clearview/123456
         description:
+          maxLength: 255
           type: string
+          description: Event description
+          example: evt123456
         archivalState:
           type: string
+          description: Event archival state
           readOnly: true
+          example: not_archived
+          enum:
+          - archived
+          - archiving
+          - not_archived
+          - restoring
         templateTypeName:
           type: string
+          description: Event template type name
           readOnly: true
+          example: RFxpress
+          enum:
+          - Direct Materials
+          - Facilities Management & Services
+          - Indirect Materials
+          - Multi-Stage
+          - Packaging
+          - Rate Structure
+          - RFxpress
+          - Routing Network
+          - SD Auction
+          - Services
+          - Transportation
         eventTypeName:
           type: string
+          description: Event type name
           readOnly: true
+          example: Reverse Auction
+          enum:
+          - Dutch Reverse Auction
+          - Forward Auction
+          - Japanese Reverse Auction
+          - Rate Structure
+          - Reverse Auction
+          - Routing Network
+          - SD Auction
+          - Sealed Bid
+          - Supply Chain
         eventTypeCategory:
           type: string
+          description: Event type category
           readOnly: true
+          example: RFX
+          enum:
+          - Advanced Sourcing
+          - eAuction
+          - RFX
         subcategory1:
+          maxLength: 64
           type: string
+          description: Event subcategory 1
+          example: Sub cat 1
         subcategory2:
+          maxLength: 64
           type: string
+          description: Event subcategory 2
+          example: Sub cat 2
         active:
           type: boolean
+          description: Event active flag
           readOnly: true
+          example: true
         createdOn:
           type: string
+          description: Date event was created
           format: date-time
           readOnly: true
         projectStartDate:
           type: string
+          description: Date event starts
           format: date-time
           readOnly: true
         biddingOpen:
           type: string
+          description: Date bidding opens in event
           format: date-time
           readOnly: true
         roundOneBiddingOpen:
           type: string
+          description: Date round one bidding opens in event
           format: date-time
           readOnly: true
         biddingClose:
           type: string
+          description: Date bidding closes in event
           format: date-time
           readOnly: true
         optimizationAvailable:
           type: string
+          description: Date optimization is available in event
           format: date-time
           readOnly: true
         optimizationUnavailable:
           type: string
+          description: Date optimization is unavailable in event
           format: date-time
           readOnly: true
         analysisEnds:
           type: string
+          description: Date analysis ends in event
           format: date-time
           readOnly: true
     SupplierUser:
@@ -2638,6 +2748,7 @@ components:
           type: integer
           description: ASO User ID of user
           format: int32
+          readOnly: true
           example: 12345
         j1UserId:
           maxLength: 255
@@ -2658,10 +2769,9 @@ components:
           type: string
           description: Type of user
           readOnly: true
-          example: unlocked
+          example: supplier
           enum:
-          - admin
-          - buyer
+          - supplier
         status:
           type: string
           description: Status of user
@@ -2682,20 +2792,31 @@ components:
       properties:
         customerHostId:
           type: integer
-          format: int64
+          description: ASO customer host ID
+          format: int32
           readOnly: true
+          example: 12345
         j1TenantId:
           type: string
+          description: J1 tenant ID
           readOnly: true
+          example: abc123-01
         name:
           type: string
+          description: "Fully qualified, customer host specific domain name for ASO\
+            \ URLs"
           readOnly: true
-        fqdn:
-          type: string
-          readOnly: true
+          example: qa.aso-qacurr-csweb.va.jaggaer.com
         useAppSwitcher:
           type: boolean
+          description: Flag to indicate App Switcher usage
+          example: true
         useBuyerModule:
           type: boolean
+          description: Flag to indicate Buyer Module usage
+          example: true
         j1HomeUrl:
           type: string
+          description: J1 home URL
+          readOnly: true
+          example: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
