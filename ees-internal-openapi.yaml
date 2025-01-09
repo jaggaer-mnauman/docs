@@ -374,10 +374,6 @@ paths:
 components:
   schemas:
     SupplierEventTimeline:
-      required:
-      - isBiddingPhase
-      - isRestrictedBySupplier
-      - isSuspended
       type: object
       properties:
         eventTimelineId:
@@ -486,6 +482,11 @@ components:
             readOnly: true
             example: 12345
         contractId:
+          maxLength: 255
+          type: string
+          description: Rate contract ID
+          example: con123
+        contractName:
           maxLength: 255
           type: string
           description: Rate contract name
