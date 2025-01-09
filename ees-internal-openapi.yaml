@@ -374,41 +374,83 @@ paths:
 components:
   schemas:
     SupplierEventTimeline:
+      required:
+      - isBiddingPhase
+      - isRestrictedBySupplier
+      - isSuspended
       type: object
       properties:
         eventTimelineId:
           type: integer
-          format: int64
+          description: Event timeline ID
+          format: int32
+          example: 12345
         name:
           type: string
+          description: Event timeline name
+          example: Bid Round 1
         eventStateName:
           type: string
+          description: Event state name
+          example: Bidding Open
+          enum:
+          - Analysis Open
+          - Analysis Read-Only
+          - Bidding Open
+          - Bidding Read-Only
+          - Closed
+          - Setup
+          - Setup Open
         startDate:
           type: string
+          description: Event timeline start date (epoch time in milliseconds)
           format: date-time
+          readOnly: true
         endDate:
           type: string
+          description: Event timeline end date (epoch time in milliseconds)
           format: date-time
+          readOnly: true
         bidRound:
           type: integer
+          description: Event timeline bid round
           format: int32
+          example: 1
         phase:
           type: integer
-          format: int64
+          description: Event timeline bid round phase
+          format: int32
+          example: 1
         isBiddingPhase:
           type: boolean
+          description: Bidding phase flag
+          example: true
         isSuspended:
           type: boolean
+          description: Suspended flag
+          example: true
         isRestrictedBySupplier:
           type: boolean
+          description: Restricted by supplier flag
+          example: true
         initialBidRequiredDate:
           type: string
+          description: Bid required by this date (epoch time in milliseconds)
           format: date-time
+          readOnly: true
         auctionDuration:
           type: integer
-          format: int64
+          description: Auction duration
+          format: int32
+          example: 1
         auctionDurationUnit:
           type: string
+          description: Auction duration unit
+          example: minute
+          enum:
+          - hour
+          - minute
+          - second
     RequestResponse:
       type: object
       properties:
@@ -417,25 +459,46 @@ components:
           additionalProperties:
             uniqueItems: true
             type: array
+            description: Response object that can return one or more status codes
+            readOnly: true
             items:
               type: object
               additionalProperties:
                 type: string
+                description: Response object that can return one or more status codes
+                readOnly: true
+              description: Response object that can return one or more status codes
+              readOnly: true
+          description: Response object that can return one or more status codes
+          readOnly: true
     RatesContract:
       type: object
       properties:
         rateIds:
           type: array
+          description: List of rate IDs to operate on
+          readOnly: true
+          example: 12345
           items:
             type: integer
+            description: List of rate IDs to operate on
             format: int64
+            readOnly: true
+            example: 12345
         contractId:
+          maxLength: 255
           type: string
-        contractName:
-          type: string
+          description: Rate contract name
+          example: Contract 123
         rateEffectiveDate:
           type: integer
+          description: Rate effective date (epoch time in milliseconds)
           format: int64
+          readOnly: true
+          example: 1480430283000
         rateExpirationDate:
           type: integer
+          description: Rate expiration date (epoch time in milliseconds)
           format: int64
+          readOnly: true
+          example: 1480430283000
