@@ -1,0 +1,506 @@
+openapi: 3.0.1
+info:
+  title: Event Entity Service (EES)
+  description: An ASO REST service for event-level entities.
+  contact:
+    email: bmcmahon@jaggaer.com
+  license:
+    name: (c) Jaggaer 2024
+  version: 24.3.0.0
+tags:
+- name: Event Timelines
+  description: Event timeline related endpoints
+- name: Rates
+  description: Event-level rate related endpoints
+paths:
+  /j1/event/{eventId}/supplierUser/{userId}/supplierEventTimelines:
+    get:
+      tags:
+      - Event Timelines
+      summary: GET Supplier Event Timelines
+      description: Returns event timeline entities for a given supplier user and event.
+      operationId: getSupplierEventTimelines
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: eventId
+        in: path
+        description: ASO event ID
+        required: true
+        schema:
+          type: number
+      - name: userId
+        in: path
+        description: ASO user ID
+        required: true
+        schema:
+          type: number
+      responses:
+        200:
+          description: List of supplier event timelines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupplierEventTimeline'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                  - eventTimelineId: 12
+                    name: Bid Round 1
+                    eventStateName: Bidding Open
+                    startDate: 1613174364000
+                    endDate: 1613260768000
+                    bidRound: 1
+                    phase: null
+                    isBiddingPhase: true
+                    isSuspended: false
+                    isRestrictedBySupplier: true
+                    initialBidRequiredDate: null
+                    auctionDuration: null
+                    auctionDurationUnit: null
+                  - eventTimelineId: 13
+                    name: Round 1 Phase A
+                    eventStateName: Bidding Open
+                    startDate: 1613174364000
+                    endDate: 1613260768000
+                    bidRound: 1
+                    phase: 1
+                    isBiddingPhase: true
+                    isSuspended: false
+                    isRestrictedBySupplier: false
+                    initialBidRequiredDate: null
+                    auctionDuration: null
+                    auctionDurationUnit: null
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_EVENT_TYPE:
+                  description: Event is not a valid type
+                  value:
+                    statuses:
+                      INVALID_EVENT_TYPE:
+                      - value: rate_structure
+        403:
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid event ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - eventId: "99999"
+                USER_PERMISSION_INACTIVE:
+                  description: User permission is not active
+                  value:
+                    statuses:
+                      USER_PERMISSION_INACTIVE:
+                      - userId: "183461"
+                USER_PERMISSION_EXPIRED:
+                  description: User permission expired
+                  value:
+                    statuses:
+                      USER_PERMISSION_EXPIRED:
+                      - userId: "183461"
+                USER_NOT_INVITED:
+                  description: User hs not been invited
+                  value:
+                    statuses:
+                      USER_NOT_INVITED:
+                      - userId: "183461"
+                SUPPLIER_NOT_REGISTERED:
+                  description: User is not registered
+                  value:
+                    statuses:
+                      SUPPLIER_NOT_REGISTERED:
+                      - userId: "183461"
+                INVITATION_NOT_APPROVED:
+                  description: User invitation has not been approved
+                  value:
+                    statuses:
+                      INVITATION_NOT_APPROVED:
+                      - invitationId: "123"
+        404:
+          description: ASO userId could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: ASO userId could not be found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - userId: "999"
+  /j1/event/{eventId}/contract/{contractId}/allRatesUrl:
+    get:
+      tags:
+      - Rates
+      summary: GET Account Settings URL
+      description: Return a an ASO URL for all rates filtered by a contract ID.
+      operationId: getAllRatesUrl
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: eventId
+        in: path
+        description: ASO event ID
+        required: true
+        schema:
+          type: number
+      - name: contractId
+        in: path
+        description: ASO rates contract ID
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns an ASO URL for all rates for a given contract
+          content:
+            application/json:
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/37557?p=view_all_bids;contract_id=99
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_EVENT_TYPE:
+                  description: Event is not a valid type
+                  value:
+                    statuses:
+                      INVALID_EVENT_TYPE:
+                      - value: sealed_bid
+        403:
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+        404:
+          description: ASO customer host alias could not be found for tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: ASO customer host alias could not be found for tenant
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - customerHostAlias: "999"
+  /j1/event/{eventId}/ratesContract:
+    patch:
+      tags:
+      - Rates
+      summary: PATCH Rate Contracts
+      description: Updates one or more rate's contract fields.
+      operationId: patchRatesContract
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: eventId
+        in: path
+        description: ASO event ID
+        required: true
+        schema:
+          type: number
+      requestBody:
+        description: Rates and contract fields to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatesContract'
+            examples:
+              REQUEST_BODY_1:
+                description: Sample request body
+                value:
+                  rateIds:
+                  - 1
+                  - 15
+                  contractId: c6666
+                  contractName: cname6666
+                  rateEffectiveDate: 1708644764000
+                  rateExpirationDate: 1708644764000
+              REQUEST_BODY_2:
+                description: Sample request body
+                value:
+                  rateIds:
+                  - 1
+                  contractId: c9999
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/RatesContract'
+            examples:
+              REQUEST_BODY_1:
+                description: Sample request body
+                value:
+                  rateIds:
+                  - 1
+                  - 15
+                  contractId: c6666
+                  contractName: cname6666
+                  rateEffectiveDate: 1708644764000
+                  rateExpirationDate: 1708644764000
+              REQUEST_BODY_2:
+                description: Sample request body
+                value:
+                  rateIds:
+                  - 1
+                  contractId: c9999
+        required: true
+      responses:
+        207:
+          description: Multi-status response indicating the status of each rateId - it is important to interrogate the response to determine which rateId's were successfully update and which may have failed for a given reason.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - rateId: "15"
+                      - rateId: "1"
+                MISSING_REQUIRED_FIELD:
+                  description: Missing required field or required value is null
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_FIELD:
+                      - field: rateIds
+                COMBINATION:
+                  description: Combination response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - rateId: "1"
+                      ENTITY_NOT_FOUND:
+                      - rateId: "99"
+        400:
+          description: Missing request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                INVALID_EVENT_TYPE:
+                  description: Event is not a valid type
+                  value:
+                    statuses:
+                      INVALID_EVENT_TYPE:
+                      - value: rate_structure
+        403:
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+                INSUFFICIENT_PERMISSIONS:
+                  description: User permissions insufficient to update rate contracts
+                  value:
+                    statuses:
+                      INSUFFICIENT_PERMISSIONS:
+                      - userId: "999"
+components:
+  schemas:
+    SupplierEventTimeline:
+      type: object
+      properties:
+        eventTimelineId:
+          type: integer
+          description: Event timeline ID
+          format: int32
+          example: 12345
+        name:
+          type: string
+          description: Event timeline name
+          example: Bid Round 1
+        eventStateName:
+          type: string
+          description: Event state name
+          example: Bidding Open
+          enum:
+          - Analysis Open
+          - Analysis Read-Only
+          - Bidding Open
+          - Bidding Read-Only
+          - Closed
+          - Setup
+          - Setup Open
+        startDate:
+          type: string
+          description: Event timeline start date (epoch time in milliseconds)
+          format: date-time
+          readOnly: true
+        endDate:
+          type: string
+          description: Event timeline end date (epoch time in milliseconds)
+          format: date-time
+          readOnly: true
+        bidRound:
+          type: integer
+          description: Event timeline bid round
+          format: int32
+          example: 1
+        phase:
+          type: integer
+          description: Event timeline bid round phase
+          format: int32
+          example: 1
+        isBiddingPhase:
+          type: boolean
+          description: Bidding phase flag
+          example: true
+        isSuspended:
+          type: boolean
+          description: Suspended flag
+          example: true
+        isRestrictedBySupplier:
+          type: boolean
+          description: Restricted by supplier flag
+          example: true
+        initialBidRequiredDate:
+          type: string
+          description: Bid required by this date (epoch time in milliseconds)
+          format: date-time
+          readOnly: true
+        auctionDuration:
+          type: integer
+          description: Auction duration
+          format: int32
+          example: 1
+        auctionDurationUnit:
+          type: string
+          description: Auction duration unit
+          example: minute
+          enum:
+          - hour
+          - minute
+          - second
+    RequestResponse:
+      type: object
+      properties:
+        statuses:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            description: Response object that can return one or more status codes
+            readOnly: true
+            items:
+              type: object
+              additionalProperties:
+                type: string
+                description: Response object that can return one or more status codes
+                readOnly: true
+              description: Response object that can return one or more status codes
+              readOnly: true
+          description: Response object that can return one or more status codes
+          readOnly: true
+    RatesContract:
+      type: object
+      properties:
+        rateIds:
+          type: array
+          description: List of rate IDs to operate on
+          readOnly: true
+          example:
+          - 1
+          - 2
+          items:
+            type: integer
+            description: List of rate IDs to operate on
+            format: int64
+            readOnly: true
+        contractId:
+          maxLength: 255
+          type: string
+          description: Rate contract ID
+          example: con123
+        contractName:
+          maxLength: 255
+          type: string
+          description: Rate contract name
+          example: Contract 123
+        rateEffectiveDate:
+          type: integer
+          description: Rate effective date (epoch time in milliseconds)
+          format: int64
+          readOnly: true
+          example: 1480430283000
+        rateExpirationDate:
+          type: integer
+          description: Rate expiration date (epoch time in milliseconds)
+          format: int64
+          readOnly: true
+          example: 1480430283000

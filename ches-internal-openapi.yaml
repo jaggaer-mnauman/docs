@@ -1,0 +1,2822 @@
+openapi: 3.0.1
+info:
+  title: Customer Host Entity Service (CHES)
+  description: An ASO REST service for customer-level entities and event meta-data.
+  contact:
+    email: bmcmahon@jaggaer.com
+  license:
+    name: (c) Jaggaer 2024
+  version: 24.3.0.0
+tags:
+- name: Buyer Users
+  description: Buyer user related endpoints
+- name: Events
+  description: Event meta-data endpoints
+- name: Supplier Users
+  description: Supplier user related endpoints
+- name: Tenants
+  description: Tenant related endpoints
+- name: Utility
+  description: Miscellaneous utilty endpoints
+paths:
+  /j1/buyerUser:
+    get:
+      tags:
+      - Buyer Users
+      summary: GET Buyer User by J1 User ID
+      description: Returns a single instance of an ASO buyer user entity for a given
+        J1 user ID.
+      operationId: getBuyerUserByTenantIdAndJ1UserId
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 User ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Buyer user entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyerUser'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    userId: 155667
+                    j1UserId: "00999130"
+                    username: gnauman+buyer@jaggaer.com
+                    name: George Nauman
+                    type: buyer
+                    status: unlocked
+                    active: true
+                    eventsRole: Event Creator
+                    ratesRole: Rate Structure Creator
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_USER_TYPE:
+                  description: User is not the correct user type
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: buyer
+                        value: supplier
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+    post:
+      tags:
+      - Buyer Users
+      summary: POST Buyer User
+      description: Creates an ASO buyer user within a given J1 tenant ID.
+      operationId: postBuyerUser
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Buyer user to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyerUser'
+            examples:
+              REQUEST_BODY:
+                description: Buyer user to create
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+                  eventsRole: Event Creator
+                  ratesRole: Rate Structure Creator
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/BuyerUser'
+            examples:
+              REQUEST_BODY:
+                description: Buyer user to create
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+                  eventsRole: Event Creator
+                  ratesRole: Rate Structure Creator
+        required: true
+      responses:
+        "201":
+          description: Buyer user entity successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - userId: "12345"
+                        j1UserId: "0098765432"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                MISSING_REQUIRED_FIELD:
+                  description: Missing required field or required value is null
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_FIELD:
+                      - field: username
+                INVALID_EMAIL_ADDRESS:
+                  description: Invalid email address
+                  value:
+                    statuses:
+                      INVALID_EMAIL_ADDRESS:
+                      - field: username
+                EXCEEDED_CHARACTER_LIMIT:
+                  description: Value exceeds character limit
+                  value:
+                    statuses:
+                      EXCEEDED_CHARACTER_LIMIT:
+                      - field: name
+                        limit: "100"
+                        value: Matthew Nauman absdefghijklmnopqrstuvwxyz 1234567890
+                          123456789 01234567890 abcdefghijklmnopqrstuvwxyz 1234567890
+                USER_ALREADY_EXISTS_1:
+                  description: Username already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - tenant: "12345678009"
+                        username: mnauman@jaggaer.com
+                USER_ALREADY_EXISTS_2:
+                  description: J1 user ID already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - j1UserId: 00000000-47
+                        tenant: "99999999009"
+                INVALID_ROLE:
+                  description: Invalid role value
+                  value:
+                    statuses:
+                      INVALID_ROLE:
+                      - eventsRole: bad role
+                FULL_LICENSE_COUNT_EXCEEDED:
+                  description: Full license count exceeded
+                  value:
+                    statuses:
+                      FULL_LICENSE_COUNT_EXCEEDED:
+                      - licenseCount: "10"
+                READONLY_LICENSE_COUNT_EXCEEDED:
+                  description: Readonly license count exceeded
+                  value:
+                    statuses:
+                      READONLY_LICENSE_COUNT_EXCEEDED:
+                      - licenseCount: "25"
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+    patch:
+      tags:
+      - Buyer Users
+      summary: PATCH Buyer User by J1 User ID
+      description: Updates an ASO buyer user for a given J1 user ID. Any combination
+        of editable fields can be updated.
+      operationId: patchBuyerUserByJ1UserId
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Buyer user changes to update
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/BuyerUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+              REQUEST_BODY_3:
+                description: Buyer user changes to update
+                value:
+                  eventsRole: Read Only
+        required: true
+      responses:
+        "200":
+          description: Buyer user successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - userId: "12345"
+                        j1UserId: "0098765432"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                MISSING_REQUIRED_VALUE:
+                  description: Missing required value
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_VALUE:
+                      - field: username
+                INVALID_USER_TYPE:
+                  description: User must be of type 'buyer'
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: buyer
+                        value: supplier
+                INVALID_EMAIL_ADDRESS:
+                  description: Invalid email address
+                  value:
+                    statuses:
+                      INVALID_EMAIL_ADDRESS:
+                      - field: username
+                EXCEEDED_CHARACTER_LIMIT:
+                  description: Value exceeds character limit
+                  value:
+                    statuses:
+                      EXCEEDED_CHARACTER_LIMIT:
+                      - field: name
+                        limit: "100"
+                        value: Matthew Nauman absdefghijklmnopqrstuvwxyz 1234567890
+                          123456789 01234567890 abcdefghijklmnopqrstuvwxyz 1234567890
+                USER_ALREADY_EXISTS_1:
+                  description: Username already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - tenant: "12345678009"
+                        username: mnauman@jaggaer.com
+                USER_ALREADY_EXISTS_2:
+                  description: J1 user ID already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - j1UserId: 00000000-47
+                        tenant: "99999999009"
+                INVALID_ROLE:
+                  description: Invalid role value
+                  value:
+                    statuses:
+                      INVALID_ROLE:
+                      - eventsRole: bad role
+                FULL_LICENSE_COUNT_EXCEEDED:
+                  description: Full license count exceeded
+                  value:
+                    statuses:
+                      FULL_LICENSE_COUNT_EXCEEDED:
+                      - licenseCount: "10"
+                READONLY_LICENSE_COUNT_EXCEEDED:
+                  description: Readonly license count exceeded
+                  value:
+                    statuses:
+                      READONLY_LICENSE_COUNT_EXCEEDED:
+                      - licenseCount: "25"
+                MISCONFIGURED_USER_PERMISSIONS:
+                  description: User has misconfigured permissions
+                  value:
+                    statuses:
+                      MISCONFIGURED_USER_PERMISSIONS:
+                      - j1UserId: 00000000-60
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+  /j1/buyerUser/{username}:
+    get:
+      tags:
+      - Buyer Users
+      summary: GET Buyer User by Username
+      description: Returns a single instance of an ASO buyer user entity for a given
+        username.
+      operationId: getBuyerUserByTenantIdAndUsername
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: path
+        description: ASO/J1 username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Buyer user entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyerUser'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    userId: 155667
+                    j1UserId: "00999130"
+                    username: gnauman+buyer@jaggaer.com
+                    name: George Nauman
+                    type: buyer
+                    status: unlocked
+                    active: true
+                    eventsRole: Event Creator
+                    ratesRole: Rate Structure Creator
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_USER_TYPE:
+                  description: User is not the correct user type
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: buyer
+                        value: supplier
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+        "404":
+          description: Username could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: Username could not be found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - username: mnuman@jaggaer.com
+    patch:
+      tags:
+      - Buyer Users
+      summary: PATCH Buyer User by Username
+      description: Updates an ASO buyer user for a given username. Any combination
+        of editable fields can be updated.
+      operationId: patchBuyerUserByUsername
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: path
+        description: ASO/J1 username
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Buyer user changes to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyerUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+              REQUEST_BODY_3:
+                description: Buyer user changed to update
+                value:
+                  eventsRole: Read Only
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/BuyerUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+              REQUEST_BODY_3:
+                description: Buyer user changed to update
+                value:
+                  eventsRole: Read Only
+        required: true
+      responses:
+        "200":
+          description: Buyer user successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - userId: "12345"
+                        j1UserId: "0098765432"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                MISSING_REQUIRED_VALUE:
+                  description: Missing required value
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_VALUE:
+                      - field: username
+                INVALID_USER_TYPE:
+                  description: User must be of type 'buyer'
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: buyer
+                        value: supplier
+                INVALID_EMAIL_ADDRESS:
+                  description: Invalid email address
+                  value:
+                    statuses:
+                      INVALID_EMAIL_ADDRESS:
+                      - field: username
+                EXCEEDED_CHARACTER_LIMIT:
+                  description: Value exceeds character limit
+                  value:
+                    statuses:
+                      EXCEEDED_CHARACTER_LIMIT:
+                      - field: name
+                        limit: "100"
+                        value: Matthew Nauman absdefghijklmnopqrstuvwxyz 1234567890
+                          123456789 01234567890 abcdefghijklmnopqrstuvwxyz 1234567890
+                USER_ALREADY_EXISTS_1:
+                  description: Username already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - tenant: "12345678009"
+                        username: mnauman@jaggaer.com
+                USER_ALREADY_EXISTS_2:
+                  description: J1 user ID already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - j1UserId: 00000000-47
+                        tenant: "99999999009"
+                INVALID_ROLE:
+                  description: Invalid role value
+                  value:
+                    statuses:
+                      INVALID_ROLE:
+                      - eventsRole: bad role
+                FULL_LICENSE_COUNT_EXCEEDED:
+                  description: Full license count exceeded
+                  value:
+                    statuses:
+                      FULL_LICENSE_COUNT_EXCEEDED:
+                      - licenseCount: "10"
+                READONLY_LICENSE_COUNT_EXCEEDED:
+                  description: Readonly license count exceeded
+                  value:
+                    statuses:
+                      READONLY_LICENSE_COUNT_EXCEEDED:
+                      - licenseCount: "25"
+                MISCONFIGURED_USER_PERMISSIONS:
+                  description: User has misconfigured permissions
+                  value:
+                    statuses:
+                      MISCONFIGURED_USER_PERMISSIONS:
+                      - j1UserId: 00000000-60
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+        "404":
+          description: Username could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: Username could not be found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - username: mnuman@jaggaer.com
+  /j1/buyerUsers:
+    get:
+      tags:
+      - Buyer Users
+      summary: GET Buyer Users
+      description: Returns ASO buyer user entities for a given J1 tenant ID.
+      operationId: getBuyerUsers
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: page_number
+        in: query
+        description: Page number or offset to be used when generating the endpoint
+          response
+        schema:
+          type: string
+        example: ?page_number=5&page_size=10
+      - name: page_size
+        in: query
+        description: Page size or limit of elements per page to be used when generating
+          the endpoint response
+        schema:
+          type: string
+        example: ?page_number=5&page_size=10
+      - name: sort_field
+        in: query
+        description: Sortable response field name to sort on
+        schema:
+          type: string
+        example: ?sort_field=username&sort_order=desc
+      - name: sort_order
+        in: query
+        description: Defaults to ascending
+        schema:
+          type: string
+          enum:
+          - ASC
+          - DESC
+        example: ?sort_field=username&sort_order=desc
+      - name: userId
+        in: query
+        schema:
+          type: number
+        example: ?userId=1234
+      - name: j1UserId
+        in: query
+        schema:
+          type: string
+        example: ?j1UserId=12345
+      - name: username
+        in: query
+        schema:
+          type: string
+        example: ?username=*jaggaer.com
+      - name: name
+        in: query
+        schema:
+          type: string
+        example: ?name=*auman
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - admin
+          - buyer
+          - supplier
+        example: ?type=buyer
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
+        example: ?status=locked
+      - name: active
+        in: query
+        schema:
+          type: boolean
+        example: ?active=true
+      responses:
+        "200":
+          description: List of buyer users
+          headers:
+            X-Pagination-Limit:
+              description: Maximum number of elements per page; Only returned when
+                paging
+              style: simple
+              schema:
+                type: number
+            X-Total-Count:
+              description: Total entity count
+              style: simple
+              schema:
+                type: number
+            X-Pagination-Page:
+              description: Current page corresponding to the endpoint response; Only
+                returned when paging
+              style: simple
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuyerUser'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                  - userId: 155334
+                    j1UserId: "00999123"
+                    username: lparker@sciquest.com
+                    name: Lark
+                    type: buyer
+                    status: unlocked
+                    active: true
+                    eventsRole: Event Creator
+                    ratesRole: Rate Structure Creator
+                  - userId: 155445
+                    j1UserId: "00999124"
+                    username: mnauman+buyer@jaggaer.com
+                    name: Matt Nauman
+                    type: buyer
+                    status: unlocked
+                    active: true
+                    eventsRole: Template Manager
+                    ratesRole: Read Only
+                  - userId: 155478
+                    j1UserId: "00999125"
+                    username: aseeke+buyer@sciquest.com
+                    name: Albert Seeke
+                    type: buyer
+                    status: unlocked
+                    active: true
+                    eventsRole: Read Only
+                    ratesRole: Read Only
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_ENUM_VALUE:
+                  description: Invalid enum value used as filter parameter
+                  value:
+                    statuses:
+                      INVALID_ENUM_VALUE:
+                      - field: eventTypeCategory
+                        value: abc
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+    head:
+      tags:
+      - Buyer Users
+      summary: HEAD Buyer Users
+      description: "In order to retrieve just the entity count and no response body\
+        \ for the GET Buyer Users endpoint, simply replace the GET method with the\
+        \ HEAD method. Invoking HEAD on the endpoint will return only the response\
+        \ headers with no response body. To find the total element count look at the\
+        \ 'X-Total-Count' response header. This endpoint can be filtered just like\
+        \ GET Buyer Users, but any paging or sorting query parameters will be ignored."
+      operationId: headBuyerUsers
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: query
+        schema:
+          type: number
+        example: ?userId=1234
+      - name: j1UserId
+        in: query
+        schema:
+          type: string
+        example: ?j1UserId=12345
+      - name: username
+        in: query
+        schema:
+          type: string
+        example: ?username=*jaggaer.com
+      - name: name
+        in: query
+        schema:
+          type: string
+        example: ?name=*auman
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - admin
+          - buyer
+          - supplier
+        example: ?type=buyer
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
+        example: ?status=locked
+      - name: active
+        in: query
+        schema:
+          type: boolean
+        example: ?active=true
+      responses:
+        "200":
+          description: Total count of entities in response header; Does not return
+            a response body.
+          headers:
+            X-Total-Count:
+              description: Total entity count
+              style: simple
+              schema:
+                type: number
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_ENUM_VALUE:
+                  description: Invalid enum value used as filter parameter
+                  value:
+                    statuses:
+                      INVALID_ENUM_VALUE:
+                      - field: status
+                        value: abc
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+  /j1/supplierUser/{userId}/supplierEvents:
+    get:
+      tags:
+      - Events
+      summary: GET Supplier Events
+      description: Returns event meta-data for a given supplier user.
+      operationId: getSupplierProjects
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: page_number
+        in: query
+        description: Page number or offset to be used when generating the endpoint
+          response
+        schema:
+          type: string
+        example: ?page_number=5&page_size=10
+      - name: page_size
+        in: query
+        description: Page size or limit of elements per page to be used when generating
+          the endpoint response
+        schema:
+          type: string
+        example: ?page_number=5&page_size=10
+      - name: sort_field
+        in: query
+        description: Sortable response field name to sort on
+        schema:
+          type: string
+        example: ?sort_field=username&sort_order=desc
+      - name: sort_order
+        in: query
+        description: Defaults to ascending
+        schema:
+          type: string
+          enum:
+          - ASC
+          - DESC
+        example: ?sort_field=username&sort_order=desc
+      - name: eventId
+        in: query
+        schema:
+          type: number
+        example: ?eventId=12345
+      - name: name
+        in: query
+        schema:
+          type: string
+        example: ?name=*auman
+      - name: eventTypeCategory
+        in: query
+        schema:
+          type: string
+          enum:
+          - RFX
+          - eAuction
+          - Advanced Sourcing
+        example: ?eventTypeCategory=RFX
+      - name: description
+        in: query
+        schema:
+          type: string
+        example: ?description=*User*
+      - name: createdOn_to
+        in: query
+        schema:
+          type: string
+        example: ?createdOn_to=1641013200000
+      - name: createdOn_from
+        in: query
+        schema:
+          type: string
+        example: ?createdOn_from=1609477200000
+      - name: biddingOpen_to
+        in: query
+        schema:
+          type: string
+        example: ?biddingOpen_to=1641013200000
+      - name: biddingOpen_from
+        in: query
+        schema:
+          type: string
+        example: ?biddingOpen_from=1641013200000
+      - name: biddingClose_to
+        in: query
+        schema:
+          type: string
+        example: ?biddingClose_to=1641013200000
+      - name: biddingClose_from
+        in: query
+        schema:
+          type: string
+        example: ?biddingClose_from=1641013200000
+      - name: userId
+        in: path
+        description: ASO user ID
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Paginated result with list of events
+          headers:
+            X-Pagination-Limit:
+              description: Maximum number of elements per page; Only returned when
+                paging
+              style: simple
+              schema:
+                type: number
+            X-Total-Count:
+              description: Total entity count
+              style: simple
+              schema:
+                type: number
+            X-Pagination-Page:
+              description: Current page corresponding to the endpoint response; Only
+                returned when paging
+              style: simple
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupplierProject'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                  - eventId: 22449
+                    customerHostId: 258
+                    name: SMC3 Demo event
+                    uriName: "22449"
+                    status: Bid Site Available
+                    url: https://qa.dev-aso-next.combinenet.com/clearview/22449
+                    description: test
+                    archivalState: not_archived
+                    templateTypeName: Transportation
+                    eventTypeName: Sealed Bid
+                    eventTypeCategory: RFX
+                    subcategory1: null
+                    subcategory2: null
+                    active: true
+                    createdOn: 1473339392000
+                    projectStartDate: 1473339392000
+                    biddingOpen: 1473339401000
+                    roundOneBiddingOpen: null
+                    biddingClose: 1483883801000
+                    optimizationAvailable: null
+                    optimizationUnavailable: 1536411401000
+                    analysisEnds: 1536411401000
+                  - eventId: 22469
+                    customerHostId: 258
+                    name: 'SMC3 Small Demo '
+                    status: Bid Site Available
+                    uriName: "22469"
+                    url: https://qa.dev-aso-next.combinenet.com/clearview/22469
+                    description: KMM
+                    archivalState: not_archived
+                    templateTypeName: Transportation
+                    eventTypeName: Sealed Bid
+                    eventTypeCategory: RFX
+                    subcategory1: null
+                    subcategory2: null
+                    active: true
+                    createdOn: 1480430283000
+                    projectStartDate: 1480430283000
+                    biddingOpen: 1480430289000
+                    roundOneBiddingOpen: null
+                    biddingClose: 1490794689000
+                    optimizationAvailable: null
+                    optimizationUnavailable: 1543502289000
+                    analysisEnds: 1543502289000
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_ENUM_VALUE:
+                  description: Invalid enum value used as filter parameter
+                  value:
+                    statuses:
+                      INVALID_ENUM_VALUE:
+                      - field: eventTypeCategory
+                        value: abc
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+        "404":
+          description: ASO userId not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: ASO userId not found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - userId: "432"
+    head:
+      tags:
+      - Events
+      summary: HEAD Supplier Events
+      description: "In order to retrieve just the entity count and no response body\
+        \ for the GET Supplier Events endpoint, simply replace the GET method with\
+        \ the HEAD method. Invoking HEAD on the endpoint will return only the response\
+        \ headers with no response body. To find the total element count look at the\
+        \ 'X-Total-Count' response header. This endpoint can be filtered just like\
+        \ GET Supplier Events, but any paging or sorting query parameters will be\
+        \ ignored."
+      operationId: headSupplierProjects
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: eventId
+        in: query
+        schema:
+          type: number
+        example: ?eventId=12345
+      - name: name
+        in: query
+        schema:
+          type: string
+        example: ?name=*auman
+      - name: eventTypeCategory
+        in: query
+        schema:
+          type: string
+          enum:
+          - RFX
+          - eAuction
+          - Advanced Sourcing
+        example: ?eventTypeCategory=RFX
+      - name: description
+        in: query
+        schema:
+          type: string
+        example: ?description=*User*
+      - name: createdOn_to
+        in: query
+        schema:
+          type: string
+        example: ?createdOn_to=1641013200000
+      - name: createdOn_from
+        in: query
+        schema:
+          type: string
+        example: ?createdOn_from=1609477200000
+      - name: biddingOpen_to
+        in: query
+        schema:
+          type: string
+        example: ?biddingOpen_to=1641013200000
+      - name: biddingOpen_from
+        in: query
+        schema:
+          type: string
+        example: ?biddingOpen_from=1641013200000
+      - name: biddingClose_to
+        in: query
+        schema:
+          type: string
+        example: ?biddingClose_to=1641013200000
+      - name: biddingClose_from
+        in: query
+        schema:
+          type: string
+        example: ?biddingClose_from=1641013200000
+      - name: userId
+        in: path
+        description: ASO user ID
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          description: Total count of entities in response header; Does not return
+            a response body.
+          headers:
+            X-Total-Count:
+              description: Total entity count
+              style: simple
+              schema:
+                type: number
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_ENUM_VALUE:
+                  description: Invalid enum value used as filter parameter
+                  value:
+                    statuses:
+                      INVALID_ENUM_VALUE:
+                      - field: eventTypeCategory
+                        value: abc
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+        "404":
+          description: ASO userId not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: ASO userId not found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - userId: "432"
+  /j1/supplierUser:
+    get:
+      tags:
+      - Supplier Users
+      summary: GET Supplier User by J1 User ID
+      description: Returns a single instance of ASO supplier user entity for a given
+        J1 user ID.
+      operationId: getSupplierUserByTenantIdAndJ1UserId
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 User ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Supplier user entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplierUser'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    userId: 155409
+                    j1UserId: "00123457"
+                    username: mnauman+supplier@jaggaer.com
+                    name: Matt Nauman
+                    type: supplier
+                    status: unlocked
+                    active: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_USER_TYPE:
+                  description: User is not the correct user type
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: supplier
+                        value: buyer
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+    post:
+      tags:
+      - Supplier Users
+      summary: POST Supplier User
+      description: Creates an ASO supplier user within a given J1 tenant ID.
+      operationId: postSupplierUser
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Supplier user to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierUser'
+            examples:
+              REQUEST_BODY:
+                description: Supplier user to create
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/SupplierUser'
+            examples:
+              REQUEST_BODY:
+                description: Supplier user to create
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+        required: true
+      responses:
+        "201":
+          description: Supplier user entity successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - userId: "12345"
+                        j1UserId: "0098765432"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                MISSING_REQUIRED_FIELD:
+                  description: Missing required field or required value is null
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_FIELD:
+                      - field: username
+                INVALID_EMAIL_ADDRESS:
+                  description: Invalid email address
+                  value:
+                    statuses:
+                      INVALID_EMAIL_ADDRESS:
+                      - field: username
+                EXCEEDED_CHARACTER_LIMIT:
+                  description: Value exceeds character limit
+                  value:
+                    statuses:
+                      EXCEEDED_CHARACTER_LIMIT:
+                      - field: name
+                        limit: "100"
+                        value: Matthew Nauman absdefghijklmnopqrstuvwxyz 1234567890
+                          123456789 01234567890 abcdefghijklmnopqrstuvwxyz 1234567890
+                USER_ALREADY_EXISTS_1:
+                  description: Username already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - tenant: "12345678009"
+                        username: mnauman@jaggaer.com
+                USER_ALREADY_EXISTS_2:
+                  description: J1 user ID already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - j1UserId: 00000000-47
+                        tenant: "99999999009"
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+    patch:
+      tags:
+      - Supplier Users
+      summary: PATCH Supplier User by J1 User ID
+      description: Updates an ASO supplier user for a given J1 user ID. Any combination
+        of editable fields can be updated.
+      operationId: patchSupplierUserByJ1UserId
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Supplier user changes to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/SupplierUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+        required: true
+      responses:
+        "200":
+          description: Supplier user successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - userId: "12345"
+                        j1UserId: "0098765432"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                MISSING_REQUIRED_VALUE:
+                  description: Missing required value
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_VALUE:
+                      - field: username
+                INVALID_USER_TYPE:
+                  description: User is not the correct user type
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: buyer
+                        value: supplier
+                INVALID_EMAIL_ADDRESS:
+                  description: Invalid email address
+                  value:
+                    statuses:
+                      INVALID_EMAIL_ADDRESS:
+                      - field: username
+                EXCEEDED_CHARACTER_LIMIT:
+                  description: Value exceeds character limit
+                  value:
+                    statuses:
+                      EXCEEDED_CHARACTER_LIMIT:
+                      - field: name
+                        limit: "100"
+                        value: Matthew Nauman absdefghijklmnopqrstuvwxyz 1234567890
+                          123456789 01234567890 abcdefghijklmnopqrstuvwxyz 1234567890
+                USER_ALREADY_EXISTS_1:
+                  description: Username already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - tenant: "12345678009"
+                        username: mnauman@jaggaer.com
+                USER_ALREADY_EXISTS_2:
+                  description: J1 user ID already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - j1UserId: 00000000-47
+                        tenant: "99999999009"
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+  /j1/supplierUser/{username}:
+    get:
+      tags:
+      - Supplier Users
+      summary: GET Supplier User by Username
+      description: Returns a single instance of an ASO supplier user entity for a
+        given username.
+      operationId: getSupplierUserByTenantIdAndUsername
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: path
+        description: ASO/J1 username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Supplier user entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplierUser'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    userId: 155409
+                    j1UserId: "00123457"
+                    username: mnauman+supplier@jaggaer.com
+                    name: Matt Nauman
+                    type: supplier
+                    status: unlocked
+                    active: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_USER_TYPE:
+                  description: User is not the correct user type
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: supplier
+                        value: buyer
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+        "404":
+          description: Username could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: Username could not be found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - username: mnuman@jaggaer.com
+    patch:
+      tags:
+      - Supplier Users
+      summary: PATCH Supplier User by Username
+      description: Updates an ASO supplier user for a given username. Any combination
+        of editable fields can be updated.
+      operationId: patchSupplierUserByUsername
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: path
+        description: ASO/J1 username
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Supplier user changes to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/SupplierUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Supplier user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+        required: true
+      responses:
+        "200":
+          description: Supplier user successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - userId: "12345"
+                        j1UserId: "0098765432"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                MISSING_REQUIRED_VALUE:
+                  description: Missing required value
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_VALUE:
+                      - field: username
+                INVALID_USER_TYPE:
+                  description: User is not the correct user type
+                  value:
+                    statuses:
+                      INVALID_USER_TYPE:
+                      - field: type
+                        expected: buyer
+                        value: supplier
+                INVALID_EMAIL_ADDRESS:
+                  description: Invalid email address
+                  value:
+                    statuses:
+                      INVALID_EMAIL_ADDRESS:
+                      - field: username
+                EXCEEDED_CHARACTER_LIMIT:
+                  description: Value exceeds character limit
+                  value:
+                    statuses:
+                      EXCEEDED_CHARACTER_LIMIT:
+                      - field: name
+                        limit: "100"
+                        value: Matthew Nauman absdefghijklmnopqrstuvwxyz 1234567890
+                          123456789 01234567890 abcdefghijklmnopqrstuvwxyz 1234567890
+                USER_ALREADY_EXISTS_1:
+                  description: Username already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - tenant: "12345678009"
+                        username: mnauman@jaggaer.com
+                USER_ALREADY_EXISTS_2:
+                  description: J1 user ID already exists
+                  value:
+                    statuses:
+                      USER_ALREADY_EXISTS:
+                      - j1UserId: 00000000-47
+                        tenant: "99999999009"
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN (x-tenant-id):
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+        "404":
+          description: Username could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                ENTITY_NOT_FOUND:
+                  description: Username could not be found
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - username: mnuman@jaggaer.com
+  /j1/supplierUsers:
+    get:
+      tags:
+      - Supplier Users
+      summary: GET Supplier Users
+      description: Returns ASO supplier user entities for a given J1 tenant ID.
+      operationId: getSupplierUsers
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: page_number
+        in: query
+        description: Page number or offset to be used when generating the endpoint
+          response
+        schema:
+          type: string
+        example: ?page_number=5&page_size=10
+      - name: page_size
+        in: query
+        description: Page size or limit of elements per page to be used when generating
+          the endpoint response
+        schema:
+          type: string
+        example: ?page_number=5&page_size=10
+      - name: sort_field
+        in: query
+        description: Sortable response field name to sort on
+        schema:
+          type: string
+        example: ?sort_field=username&sort_order=desc
+      - name: sort_order
+        in: query
+        description: Defaults to ascending
+        schema:
+          type: string
+          enum:
+          - ASC
+          - DESC
+        example: ?sort_field=username&sort_order=desc
+      - name: userId
+        in: query
+        schema:
+          type: number
+        example: ?userId=1234
+      - name: j1UserId
+        in: query
+        schema:
+          type: string
+        example: ?j1UserId=12345
+      - name: username
+        in: query
+        schema:
+          type: string
+        example: ?username=*jaggaer.com
+      - name: name
+        in: query
+        schema:
+          type: string
+        example: ?name=*auman
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - admin
+          - buyer
+          - supplier
+        example: ?type=supplier
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
+        example: ?status=locked
+      - name: active
+        in: query
+        schema:
+          type: boolean
+        example: ?active=true
+      responses:
+        "200":
+          description: List of supplier users
+          headers:
+            X-Pagination-Limit:
+              description: Maximum number of elements per page; Only returned when
+                paging
+              style: simple
+              schema:
+                type: number
+            X-Total-Count:
+              description: Total entity count
+              style: simple
+              schema:
+                type: number
+            X-Pagination-Page:
+              description: Current page corresponding to the endpoint response; Only
+                returned when paging
+              style: simple
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupplierUser'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                  - userId: 155320
+                    j1UserId: "00123456"
+                    username: lparker@jaggaer.com
+                    name: Lark
+                    type: supplier
+                    status: unlocked
+                    active: true
+                  - userId: 155409
+                    j1UserId: "00123457"
+                    username: mnauman+258@jaggaer.com
+                    name: Matt N
+                    type: supplier
+                    status: unlocked
+                    active: true
+                  - userId: 155452
+                    j1UserId: "00123458"
+                    username: aseeke+bidder@jaggaer.com
+                    name: Albert Seeke
+                    type: supplier
+                    status: unlocked
+                    active: true
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_ENUM_VALUE:
+                  description: Invalid enum value used as filter parameter
+                  value:
+                    statuses:
+                      INVALID_ENUM_VALUE:
+                      - field: status
+                        value: abc
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+    head:
+      tags:
+      - Supplier Users
+      summary: HEAD Supplier Users
+      description: "In order to retrieve just the entity count and no response body\
+        \ for the GET Supplier Users endpoint, simply replace the GET method with\
+        \ the HEAD method. Invoking HEAD on the endpoint will return only the response\
+        \ headers with no response body. To find the total element count look at the\
+        \ 'X-Total-Count' response header. This endpoint can be filtered just like\
+        \ GET Supplier Users, but any paging or sorting query parameters will be ignored."
+      operationId: headSupplierUsers
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: query
+        schema:
+          type: number
+        example: ?userId=1234
+      - name: j1UserId
+        in: query
+        schema:
+          type: string
+        example: ?j1UserId=12345
+      - name: username
+        in: query
+        schema:
+          type: string
+        example: ?username=*jaggaer.com
+      - name: name
+        in: query
+        schema:
+          type: string
+        example: ?name=*auman
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - admin
+          - buyer
+          - supplier
+        example: ?type=supplier
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
+        example: ?status=locked
+      - name: active
+        in: query
+        schema:
+          type: boolean
+        example: ?active=true
+      responses:
+        "200":
+          description: Total count of entities in response header; Does not return
+            a response body.
+          headers:
+            X-Total-Count:
+              description: Total entity count
+              style: simple
+              schema:
+                type: number
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                INVALID_ENUM_VALUE:
+                  description: Invalid enum value used as filter parameter
+                  value:
+                    statuses:
+                      INVALID_ENUM_VALUE:
+                      - field: status
+                        value: abc
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+  /j1/tenant:
+    get:
+      tags:
+      - Tenants
+      summary: GET Tenant Config
+      description: Returns a single instance of ASO customer host/tenant entity.
+      operationId: getCustomerHostByTenantId
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns a single instance of ASO customer host/tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiCustomerHost'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    customerHostId: 275
+                    j1TenantId: "99999999009"
+                    name: QA
+                    fqdn: qa.aso-qacurr-csweb.va.jaggaer.com
+                    useAppSwitcher: false
+                    useBuyerModule: false
+                    j1HomeUrl: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+    patch:
+      tags:
+      - Tenants
+      summary: PATCH Tenant Config
+      description: Updates an ASO customer host/tenant. Any combination of editable
+        fields can updated.
+      operationId: patchCustomerHostByTenantId
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Customer Host / Tenant to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerHost'
+            examples:
+              REQUEST_BODY_1:
+                description: Tenant changes to update
+                value:
+                  useAppSwitcher: false
+                  useBuyerModule: true
+                  j1HomeUrl: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
+              REQUEST_BODY_2:
+                description: Tenant changes to update
+                value:
+                  useBuyerModule: false
+                  j1HomeUrl: null
+          application/vnd.sciquest.com.ches+json;qs=1:
+            schema:
+              $ref: '#/components/schemas/ApiCustomerHost'
+            examples:
+              REQUEST_BODY_1:
+                description: Tenant changes to update
+                value:
+                  useAppSwitcher: false
+                  useBuyerModule: true
+                  j1HomeUrl: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
+              REQUEST_BODY_2:
+                description: Tenant changes to update
+                value:
+                  useBuyerModule: false
+                  j1HomeUrl: null
+        required: true
+      responses:
+        "200":
+          description: Tenant successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    statuses:
+                      SUCCESS:
+                      - j1TenantId: "99999999009"
+                        customerHostId: "275"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                NULL_PAYLOAD:
+                  description: Missing request body
+                  value:
+                    statuses:
+                      NULL_PAYLOAD:
+                      - payload: null
+                CANNOT_UPDATE_READONLY_FIELD:
+                  description: Attempt to update a readonly field
+                  value:
+                    statuses:
+                      CANNOT_UPDATE_READONLY_FIELD:
+                      - field: customerHostId
+                MISSING_REQUIRED_VALUE:
+                  description: Required value is missing or null
+                  value:
+                    statuses:
+                      MISSING_REQUIRED_VALUE:
+                      - field: useBuyerModule
+                INVALID_URL:
+                  description: Invalid URL value
+                  value:
+                    statuses:
+                      INVALID_URL:
+                      - field: j1HomeUrl
+                        value: htt://badurl
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+  /j1/accountSettingsUrl:
+    get:
+      tags:
+      - Utility
+      summary: GET Account Settings URL
+      description: Returns an ASO URL for user account settings.
+      operationId: getAccountSettingsUrl
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns an ASO URL for user account settings
+          content:
+            application/json:
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/clearsuite_management?p=account_management
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+  /j1/menuUrls:
+    get:
+      tags:
+      - Utility
+      summary: GET Menu URLs
+      description: Returns a list of ASO menu URLs.
+      operationId: getMenuUrls
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns a list of ASO menu URLs
+          content:
+            application/json:
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                  - name: event_list
+                    url: https://j1qa01.qa-next-csweb.pit.jaggaer.com/clearview/cv?p=proj_list
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+  /j1/solutionSwitcherUrls:
+    get:
+      tags:
+      - Utility
+      summary: GET Solution Switcher URLs
+      description: Returns a list of ASO URLs for use by solution switcher.
+      operationId: getSolutionSwitcherUrls
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns a list of ASO URLs for use by solution switcher
+          content:
+            application/json:
+              examples:
+                SUCCESS_1:
+                  description: Success response - event list URL and rate structure
+                    list URL
+                  value:
+                  - name: event_list
+                    url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/cv?p=proj_list;plt=evt;j1BuyerRedirect=1
+                  - name: rate_structure_list
+                    url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/cv?p=proj_list;plt=rs;j1BuyerRedirect=1
+                SUCCESS_2:
+                  description: Success response - event list URL
+                  value:
+                  - name: event_list
+                    url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/cv?p=proj_list;plt=evt;j1BuyerRedirect=1
+                SUCCESS_3:
+                  description: Success response - rate structure URL
+                  value:
+                  - name: rate_structure_list
+                    url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/cv?p=proj_list;plt=rs;j1BuyerRedirect=1
+                SUCCESS_4:
+                  description: Success response - empty list
+                  value: []
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 user ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+  /j1/userDetailUrls:
+    get:
+      tags:
+      - Utility
+      summary: GET User Detail URLs
+      description: Returns ASO URLs for user detail.
+      operationId: getUserDetailUrls
+      parameters:
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns ASO URLs for user detail
+          content:
+            application/json:
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    asoUserUrl: https://qa.aso-qapoint-csweb.va.jaggaer.com/clearview/cs_buyer_enablement_qa?p=user;user_to_edit=132184
+                    ratesUserUrl: https://qa.aso-qapoint-csweb.va.jaggaer.com/clearview/cs_rate_manager_qa?p=user;user_to_edit=132184
+        "403":
+          description: Authorization or authentication issue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestResponse'
+              examples:
+                AUTHENTICATION_FORBIDDEN_1:
+                  description: Missing or invalid tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-TENANT-ID: "9999999900911"
+                AUTHENTICATION_FORBIDDEN_2:
+                  description: Missing or invalid J1 tenant ID
+                  value:
+                    statuses:
+                      AUTHENTICATION_FORBIDDEN:
+                      - X-USER-ID: 00000999-99
+components:
+  schemas:
+    BuyerUser:
+      required:
+      - active
+      - eventsRole
+      - j1UserId
+      - name
+      - ratesRole
+      - username
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: ASO User ID of user
+          format: int32
+          readOnly: true
+          example: 12345
+        j1UserId:
+          maxLength: 255
+          type: string
+          description: J1 User ID of user
+          example: abcd1234-01
+        username:
+          maxLength: 100
+          type: string
+          description: Username of user
+          example: user123@domain.com
+        name:
+          maxLength: 100
+          type: string
+          description: Full name of user
+          example: Thomas P. User
+        type:
+          type: string
+          description: Type of user
+          readOnly: true
+          example: buyer
+          enum:
+          - admin
+          - buyer
+        status:
+          type: string
+          description: Status of user
+          readOnly: true
+          example: unlocked
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
+        active:
+          type: boolean
+          description: User active flag
+          example: true
+        eventsRole:
+          type: string
+          description: RFX and auction events role
+          readOnly: true
+          example: Event Creator
+          enum:
+          - Event Creator
+          - My Company Admin
+          - Template Manager
+          - Read Only
+        ratesRole:
+          type: string
+          description: Rate Manager rate structure role
+          readOnly: true
+          example: Rate Structure Creator
+          enum:
+          - Rate Structure Creator
+          - My Company Admin
+          - Template Manager
+          - Read Only
+    RequestResponse:
+      type: object
+      properties:
+        statuses:
+          type: object
+          additionalProperties:
+            uniqueItems: true
+            type: array
+            description: Response object that can return one or more status codes
+            readOnly: true
+            example:
+              statuses:
+                USER_ALREADY_EXISTS:
+                - j1UserId: 00000000-47
+                  tenant: "99999999009"
+                MISSING_REQUIRED_FIELD:
+                - field: username
+            items:
+              type: object
+              additionalProperties:
+                type: string
+                description: Response object that can return one or more status codes
+                readOnly: true
+                example: "{\"statuses\":{\"USER_ALREADY_EXISTS\":[{\"j1UserId\":\"\
+                  00000000-47\",\"tenant\":\"99999999009\"}],\"MISSING_REQUIRED_FIELD\"\
+                  :[{\"field\":\"username\"}]}}"
+              description: Response object that can return one or more status codes
+              readOnly: true
+              example:
+                statuses:
+                  USER_ALREADY_EXISTS:
+                  - j1UserId: 00000000-47
+                    tenant: "99999999009"
+                  MISSING_REQUIRED_FIELD:
+                  - field: username
+          description: Response object that can return one or more status codes
+          readOnly: true
+          example:
+            statuses:
+              USER_ALREADY_EXISTS:
+              - j1UserId: 00000000-47
+                tenant: "99999999009"
+              MISSING_REQUIRED_FIELD:
+              - field: username
+    SupplierProject:
+      type: object
+      properties:
+        eventId:
+          type: integer
+          description: ASO event ID
+          format: int32
+          readOnly: true
+          example: 123456
+        customerHostId:
+          type: integer
+          description: ASO customer host ID
+          format: int32
+          readOnly: true
+          example: 123
+        name:
+          maxLength: 255
+          type: string
+          description: Event name
+          example: Event Name
+        status:
+          type: string
+          description: Type of user
+          readOnly: true
+          example: Bid Site Available
+          enum:
+          - Bid Site Available
+        uriName:
+          maxLength: 100
+          type: string
+          description: Event URI name
+          readOnly: true
+          example: evt123456
+        url:
+          type: string
+          description: Event URL
+          readOnly: true
+          example: https://qa.dev-aso-next.combinenet.com/clearview/123456
+        description:
+          maxLength: 255
+          type: string
+          description: Event description
+          example: evt123456
+        archivalState:
+          type: string
+          description: Event archival state
+          readOnly: true
+          example: not_archived
+          enum:
+          - archived
+          - archiving
+          - not_archived
+          - restoring
+        templateTypeName:
+          type: string
+          description: Event template type name
+          readOnly: true
+          example: RFxpress
+          enum:
+          - Direct Materials
+          - Facilities Management & Services
+          - Indirect Materials
+          - Multi-Stage
+          - Packaging
+          - Rate Structure
+          - RFxpress
+          - Routing Network
+          - SD Auction
+          - Services
+          - Transportation
+        eventTypeName:
+          type: string
+          description: Event type name
+          readOnly: true
+          example: Reverse Auction
+          enum:
+          - Dutch Reverse Auction
+          - Forward Auction
+          - Japanese Reverse Auction
+          - Rate Structure
+          - Reverse Auction
+          - Routing Network
+          - SD Auction
+          - Sealed Bid
+          - Supply Chain
+        eventTypeCategory:
+          type: string
+          description: Event type category
+          readOnly: true
+          example: RFX
+          enum:
+          - Advanced Sourcing
+          - eAuction
+          - RFX
+        subcategory1:
+          maxLength: 64
+          type: string
+          description: Event subcategory 1
+          example: Sub cat 1
+        subcategory2:
+          maxLength: 64
+          type: string
+          description: Event subcategory 2
+          example: Sub cat 2
+        active:
+          type: boolean
+          description: Event active flag
+          readOnly: true
+          example: true
+        createdOn:
+          type: string
+          description: Date event was created
+          format: date-time
+          readOnly: true
+        projectStartDate:
+          type: string
+          description: Date event starts
+          format: date-time
+          readOnly: true
+        biddingOpen:
+          type: string
+          description: Date bidding opens in event
+          format: date-time
+          readOnly: true
+        roundOneBiddingOpen:
+          type: string
+          description: Date round one bidding opens in event
+          format: date-time
+          readOnly: true
+        biddingClose:
+          type: string
+          description: Date bidding closes in event
+          format: date-time
+          readOnly: true
+        optimizationAvailable:
+          type: string
+          description: Date optimization is available in event
+          format: date-time
+          readOnly: true
+        optimizationUnavailable:
+          type: string
+          description: Date optimization is unavailable in event
+          format: date-time
+          readOnly: true
+        analysisEnds:
+          type: string
+          description: Date analysis ends in event
+          format: date-time
+          readOnly: true
+    SupplierUser:
+      required:
+      - active
+      - j1UserId
+      - name
+      - username
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: ASO User ID of user
+          format: int32
+          readOnly: true
+          example: 12345
+        j1UserId:
+          maxLength: 255
+          type: string
+          description: J1 User ID of user
+          example: abcd1234-01
+        username:
+          maxLength: 100
+          type: string
+          description: Username of user
+          example: user123@domain.com
+        name:
+          maxLength: 100
+          type: string
+          description: Full name of user
+          example: Thomas P. User
+        type:
+          type: string
+          description: Type of user
+          readOnly: true
+          example: supplier
+          enum:
+          - supplier
+        status:
+          type: string
+          description: Status of user
+          readOnly: true
+          example: unlocked
+          enum:
+          - bad_password
+          - expired
+          - locked
+          - single_use
+          - unlocked
+        active:
+          type: boolean
+          description: User active flag
+          example: true
+    ApiCustomerHost:
+      type: object
+      properties:
+        customerHostId:
+          type: integer
+          description: ASO customer host ID
+          format: int32
+          readOnly: true
+          example: 12345
+        j1TenantId:
+          type: string
+          description: J1 tenant ID
+          readOnly: true
+          example: abc123-01
+        name:
+          type: string
+          description: "Fully qualified, customer host specific domain name for ASO\
+            \ URLs"
+          readOnly: true
+          example: qa.aso-qacurr-csweb.va.jaggaer.com
+        useAppSwitcher:
+          type: boolean
+          description: Flag to indicate App Switcher usage
+          example: true
+        useBuyerModule:
+          type: boolean
+          description: Flag to indicate Buyer Module usage
+          example: true
+        j1HomeUrl:
+          type: string
+          description: J1 home URL
+          readOnly: true
+          example: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
