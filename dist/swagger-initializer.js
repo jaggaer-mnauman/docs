@@ -11,8 +11,13 @@ window.onload = function() {
       {
         url: "ees-internal-openapi.yaml",
         name: "Event Entity Service (EES)"
+      },
+      {
+        url: "auth-internal-openapi.yaml",
+        name: "Authorization Service (Auth)"
       }
     ],
+    supportedSubmitMethods: [],
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [

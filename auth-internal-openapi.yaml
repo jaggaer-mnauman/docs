@@ -1,0 +1,110 @@
+openapi: 3.0.1
+info:
+  title: Authorization Service (Auth)
+  description: ASO OAuth 2.0 authorization service. The client credentials grant allows
+    a trusted server-side software component to obtain a long-term system-to-system
+    bearer access token. This token allows a client back-end system to make requests
+    to system (non-user) end-points on a resource server.
+  contact:
+    email: bmcmahon@jaggaer.com
+  license:
+    name: (c) Jaggaer 2024
+  version: 25.1.0.0
+tags:
+- name: Tokens
+  description: Token acquisition endpoints
+paths:
+  /oauth2/token:
+    post:
+      tags:
+      - Tokens
+      summary: Bearer Token Issuance
+      description: Obtain a system-to-system bearer access token.
+      operationId: token
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: grant_type
+        in: query
+        description: OAuth grant_type; Will always be 'grant_type=client_credentials'
+        required: true
+        schema:
+          type: string
+        example: grant_type=client_credentials
+      - name: scope
+        in: query
+        description: "Token scope; Will be 'tenant-aso {customer-host-id}' or 'tenant-j1\
+          \ {tenant-id}'"
+        required: true
+        schema:
+          type: string
+        examples:
+          tenant-aso:
+            description: Scope the token using customer host ID
+            value: scope=tenant-aso 275
+          tenant-j1:
+            description: Scope the token using tenant ID
+            value: scope=tenant-j1 99999999009
+      - name: Authorization
+        in: header
+        description: Uses 'Basic' auth and takes the value of Base64ed 'client-id:client-secret'
+        required: true
+        schema:
+          type: string
+        example: Basic cWFfYWRtaW5fYXBpOjM3ODQzlMpOlillMDktMTFlYi1hMGJhLTAwNTA1NjgwZmVlYQ==
+      responses:
+        "200":
+          description: System-to-system bearer access token successfully returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    scope: "2"
+                    access_token: 3ea64352-8a05-4bb1-a2ac-d4e40e5a0837
+                    token_type: bearer
+                    expires_in: 86400
+        "400":
+          description: Invalid request
+        "401":
+          description: Authorization or authentication issue
+        "403":
+          description: Authorization or authentication issue
+components:
+  schemas:
+    AccessTokenResponse:
+      type: object
+      properties:
+        scope:
+          type: string
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+          format: int64
+        refresh_token:
+          type: string

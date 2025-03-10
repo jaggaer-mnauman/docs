@@ -6,7 +6,7 @@ info:
     email: bmcmahon@jaggaer.com
   license:
     name: (c) Jaggaer 2024
-  version: 24.3.0.0
+  version: 25.1.0.0
 tags:
 - name: Event Timelines
   description: Event timeline related endpoints
@@ -21,6 +21,33 @@ paths:
       description: Returns event timeline entities for a given supplier user and event.
       operationId: getSupplierEventTimelines
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -40,7 +67,7 @@ paths:
         schema:
           type: number
       responses:
-        200:
+        "200":
           description: List of supplier event timelines
           content:
             application/json:
@@ -78,7 +105,7 @@ paths:
                     initialBidRequiredDate: null
                     auctionDuration: null
                     auctionDurationUnit: null
-        400:
+        "400":
           description: Bad request
           content:
             application/json:
@@ -91,7 +118,7 @@ paths:
                     statuses:
                       INVALID_EVENT_TYPE:
                       - value: rate_structure
-        403:
+        "403":
           description: Authorization or authentication issue
           content:
             application/json:
@@ -134,7 +161,7 @@ paths:
                     statuses:
                       INVITATION_NOT_APPROVED:
                       - invitationId: "123"
-        404:
+        "404":
           description: ASO userId could not be found
           content:
             application/json:
@@ -155,6 +182,33 @@ paths:
       description: Return a an ASO URL for all rates filtered by a contract ID.
       operationId: getAllRatesUrl
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -180,7 +234,7 @@ paths:
         schema:
           type: string
       responses:
-        200:
+        "200":
           description: Returns an ASO URL for all rates for a given contract
           content:
             application/json:
@@ -189,7 +243,7 @@ paths:
                   description: Success response
                   value:
                     url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/37557?p=view_all_bids;contract_id=99
-        400:
+        "400":
           description: Bad request
           content:
             application/json:
@@ -202,7 +256,7 @@ paths:
                     statuses:
                       INVALID_EVENT_TYPE:
                       - value: sealed_bid
-        403:
+        "403":
           description: Authorization or authentication issue
           content:
             application/json:
@@ -215,7 +269,7 @@ paths:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
                       - X-USER-ID: 00000999-99
-        404:
+        "404":
           description: ASO customer host alias could not be found for tenant
           content:
             application/json:
@@ -236,6 +290,40 @@ paths:
       description: Updates one or more rate's contract fields.
       operationId: patchRatesContract
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -299,8 +387,10 @@ paths:
                   contractId: c9999
         required: true
       responses:
-        207:
-          description: Multi-status response indicating the status of each rateId - it is important to interrogate the response to determine which rateId's were successfully update and which may have failed for a given reason.
+        "207":
+          description: Multi-status response indicating the status of each rateId
+            - it is important to interrogate the response to determine which rateId's
+            were successfully update and which may have failed for a given reason.
           content:
             application/json:
               schema:
@@ -327,7 +417,7 @@ paths:
                       - rateId: "1"
                       ENTITY_NOT_FOUND:
                       - rateId: "99"
-        400:
+        "400":
           description: Missing request body
           content:
             application/json:
@@ -346,7 +436,7 @@ paths:
                     statuses:
                       INVALID_EVENT_TYPE:
                       - value: rate_structure
-        403:
+        "403":
           description: Authorization or authentication issue
           content:
             application/json:

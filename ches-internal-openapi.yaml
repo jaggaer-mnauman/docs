@@ -6,7 +6,7 @@ info:
     email: bmcmahon@jaggaer.com
   license:
     name: (c) Jaggaer 2024
-  version: 24.3.0.0
+  version: 25.1.0.0
 tags:
 - name: Buyer Users
   description: Buyer user related endpoints
@@ -28,6 +28,33 @@ paths:
         J1 user ID.
       operationId: getBuyerUserByTenantIdAndJ1UserId
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -101,6 +128,40 @@ paths:
       description: Creates an ASO buyer user within a given J1 tenant ID.
       operationId: postBuyerUser
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -237,6 +298,40 @@ paths:
         of editable fields can be updated.
       operationId: patchBuyerUserByJ1UserId
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -252,7 +347,26 @@ paths:
       requestBody:
         description: Buyer user changes to update
         content:
-          '*/*':
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyerUser'
+            examples:
+              REQUEST_BODY_1:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  username: mnauman@jaggaer.com
+                  name: Matthew Nauman
+              REQUEST_BODY_2:
+                description: Buyer user changes to update
+                value:
+                  j1UserId: "0098765432"
+                  active: true
+              REQUEST_BODY_3:
+                description: Buyer user changes to update
+                value:
+                  eventsRole: Read Only
+          application/vnd.sciquest.com.ches+json;qs=1:
             schema:
               $ref: '#/components/schemas/BuyerUser'
             examples:
@@ -395,6 +509,33 @@ paths:
         username.
       operationId: getBuyerUserByTenantIdAndUsername
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -476,6 +617,40 @@ paths:
         of editable fields can be updated.
       operationId: patchBuyerUserByUsername
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -659,6 +834,33 @@ paths:
       description: Returns ASO buyer user entities for a given J1 tenant ID.
       operationId: getBuyerUsers
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -836,6 +1038,26 @@ paths:
         \ GET Buyer Users, but any paging or sorting query parameters will be ignored."
       operationId: headBuyerUsers
       parameters:
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -932,6 +1154,33 @@ paths:
       description: Returns event meta-data for a given supplier user.
       operationId: getSupplierProjects
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1155,6 +1404,26 @@ paths:
         \ ignored."
       operationId: headSupplierProjects
       parameters:
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1280,6 +1549,33 @@ paths:
         J1 user ID.
       operationId: getSupplierUserByTenantIdAndJ1UserId
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1351,6 +1647,40 @@ paths:
       description: Creates an ASO supplier user within a given J1 tenant ID.
       operationId: postSupplierUser
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1465,6 +1795,40 @@ paths:
         of editable fields can be updated.
       operationId: patchSupplierUserByJ1UserId
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1610,6 +1974,33 @@ paths:
         given username.
       operationId: getSupplierUserByTenantIdAndUsername
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1689,6 +2080,40 @@ paths:
         of editable fields can be updated.
       operationId: patchSupplierUserByUsername
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1840,6 +2265,33 @@ paths:
       description: Returns ASO supplier user entities for a given J1 tenant ID.
       operationId: getSupplierUsers
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2011,6 +2463,26 @@ paths:
         \ GET Supplier Users, but any paging or sorting query parameters will be ignored."
       operationId: headSupplierUsers
       parameters:
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2107,6 +2579,33 @@ paths:
       description: Returns a single instance of ASO customer host/tenant entity.
       operationId: getCustomerHostByTenantId
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acuquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2152,6 +2651,40 @@ paths:
         fields can updated.
       operationId: patchCustomerHostByTenantId
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/x-www-form-urlencoded
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2260,6 +2793,33 @@ paths:
       description: Returns an ASO URL for user account settings.
       operationId: getAccountSettingsUrl
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2309,6 +2869,33 @@ paths:
       description: Returns a list of ASO menu URLs.
       operationId: getMenuUrls
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2359,6 +2946,33 @@ paths:
       description: Returns a list of ASO URLs for use by solution switcher.
       operationId: getSolutionSwitcherUrls
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2425,6 +3039,33 @@ paths:
       description: Returns ASO URLs for user detail.
       operationId: getUserDetailUrls
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2553,40 +3194,16 @@ components:
             type: array
             description: Response object that can return one or more status codes
             readOnly: true
-            example:
-              statuses:
-                USER_ALREADY_EXISTS:
-                - j1UserId: 00000000-47
-                  tenant: "99999999009"
-                MISSING_REQUIRED_FIELD:
-                - field: username
             items:
               type: object
               additionalProperties:
                 type: string
                 description: Response object that can return one or more status codes
                 readOnly: true
-                example: "{\"statuses\":{\"USER_ALREADY_EXISTS\":[{\"j1UserId\":\"\
-                  00000000-47\",\"tenant\":\"99999999009\"}],\"MISSING_REQUIRED_FIELD\"\
-                  :[{\"field\":\"username\"}]}}"
               description: Response object that can return one or more status codes
               readOnly: true
-              example:
-                statuses:
-                  USER_ALREADY_EXISTS:
-                  - j1UserId: 00000000-47
-                    tenant: "99999999009"
-                  MISSING_REQUIRED_FIELD:
-                  - field: username
           description: Response object that can return one or more status codes
           readOnly: true
-          example:
-            statuses:
-              USER_ALREADY_EXISTS:
-              - j1UserId: 00000000-47
-                tenant: "99999999009"
-              MISSING_REQUIRED_FIELD:
-              - field: username
     SupplierProject:
       type: object
       properties:
@@ -2698,42 +3315,42 @@ components:
           example: true
         createdOn:
           type: string
-          description: Date event was created
+          description: Date event was created (epoch time in milliseconds)
           format: date-time
           readOnly: true
         projectStartDate:
           type: string
-          description: Date event starts
+          description: Date event starts (epoch time in milliseconds)
           format: date-time
           readOnly: true
         biddingOpen:
           type: string
-          description: Date bidding opens in event
+          description: Date bidding opens in event (epoch time in milliseconds)
           format: date-time
           readOnly: true
         roundOneBiddingOpen:
           type: string
-          description: Date round one bidding opens in event
+          description: Date round one bidding opens in event (epoch time in milliseconds)
           format: date-time
           readOnly: true
         biddingClose:
           type: string
-          description: Date bidding closes in event
+          description: Date bidding closes in event (epoch time in milliseconds)
           format: date-time
           readOnly: true
         optimizationAvailable:
           type: string
-          description: Date optimization is available in event
+          description: Date optimization is available in event (epoch time in milliseconds)
           format: date-time
           readOnly: true
         optimizationUnavailable:
           type: string
-          description: Date optimization is unavailable in event
+          description: Date optimization is unavailable in event (epoch time in milliseconds)
           format: date-time
           readOnly: true
         analysisEnds:
           type: string
-          description: Date analysis ends in event
+          description: Date analysis ends in event (epoch time in milliseconds)
           format: date-time
           readOnly: true
     SupplierUser:
