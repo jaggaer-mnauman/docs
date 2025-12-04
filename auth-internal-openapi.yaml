@@ -12,9 +12,9 @@ info:
   version: 25.1.0.0
 tags:
 - name: JWT Authentication
-  description: "JWT token generation, validation, and refresh operations"
-- name: Tokens
-  description: Token acquisition endpoints
+  description: "JWT token generation, validation, and refresh endpoints"
+- name: OAuth 2.0 Authentication
+  description: Token acquisition endpoint
 paths:
   /jwt/generate:
     post:
@@ -46,7 +46,7 @@ paths:
           type: string
         example: CS_TICKET_GRANTING_TICKET_74254726=2bXgOXRE1i4vZX8XFDf0xJx6cnsKlehpKQW5BxMfpT...
       requestBody:
-        description: ASO ticker granting ticket
+        description: ASO ticket granting ticket
         content:
           application/json:
             schema:
@@ -92,12 +92,20 @@ paths:
                   value:
                     error: TGT cookie or value is required
         "401":
-          description: Associated user is locked
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               examples:
+                Not Found:
+                  description: TGT not found
+                  value:
+                    error: TGT Not Found
+                Expired:
+                  description: TGT is expired
+                  value:
+                    error: Expired TGT
                 Locked:
                   description: Associated user is locked
                   value:
@@ -185,7 +193,6 @@ paths:
         description: ASO JWT refresh token
         schema:
           type: string
-          format: cookie
         example: ASO_JWT_REFRESH_TOKEN_74254726=ad933685-b1df-48ce-98cb-60e6de6c18ed
       requestBody:
         description: ASO JWT refresh token
@@ -234,12 +241,20 @@ paths:
                   value:
                     error: Refresh token cookie or value is required
         "401":
-          description: Refresh token has expired
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               examples:
+                Not Found:
+                  description: Refresh token not found
+                  value:
+                    error: Refresh token not found
+                Revoked:
+                  description: Refresh token revoked
+                  value:
+                    error: Refresh token revoked
                 Expired:
                   description: Refresh token expired
                   value:
@@ -325,17 +340,27 @@ paths:
                   value:
                     error: Access token is required
         "401":
-          description: Access token validation failed
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidateTokenResponse'
               examples:
-                Validation Failed:
-                  description: Access token validation failed
+                Expired:
+                  description: Access token expired
                   value:
                     valid: false
-                    error: Token validation failed
+                    error: Token has expired
+                Invalid Signature:
+                  description: Invalid access token signature
+                  value:
+                    valid: false
+                    error: Invalid token signature
+                Invalid Token:
+                  description: Invalid access token
+                  value:
+                    valid: false
+                    error: Invalid token
         "500":
           description: Unexpected error
           content:
@@ -350,7 +375,7 @@ paths:
   /oauth2/token:
     post:
       tags:
-      - Tokens
+      - OAuth 2.0 Authentication
       summary: Bearer Token Issuance
       description: Obtain a system-to-system bearer access token.
       operationId: token
