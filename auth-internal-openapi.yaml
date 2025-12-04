@@ -11,9 +11,342 @@ info:
     name: (c) Jaggaer 2024
   version: 25.1.0.0
 tags:
+- name: JWT Authentication
+  description: "JWT token generation, validation, and refresh operations"
 - name: Tokens
   description: Token acquisition endpoints
 paths:
+  /jwt/generate:
+    post:
+      tags:
+      - JWT Authentication
+      summary: Generate JWT tokens
+      description: Generates a new access token and refresh token for a user with
+        optional custom claims. A valid ASO TGT is required and can be sent in a Cookie
+        header or included in the request body.
+      operationId: generateTokens
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: TGT Cookie
+        in: cookie
+        description: ASO ticket granting ticket cookie
+        schema:
+          type: string
+        example: CS_TICKET_GRANTING_TICKET_74254726=2bXgOXRE1i4vZX8XFDf0xJx6cnsKlehpKQW5BxMfpT...
+      requestBody:
+        description: ASO ticker granting ticket
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateTokenRequest'
+            examples:
+              Request Body:
+                description: ASO ticket granting ticket value
+                value:
+                  tgt: 2bXgOXRE1i4vZX8XFDf0xJx6cnsKlehpKQW5BxMfpT...
+      responses:
+        "200":
+          description: Tokens generated successfully
+          headers:
+            Set-Cookie:
+              description: JWT refresh token
+              style: simple
+              schema:
+                type: string
+                format: cookie
+              example: ASO_JWT_REFRESH_TOKEN_74254726=2dd4e1bc-83ff-4af1-8d49-fce1a5a3e927;Version=1;Comment=ASO-TGT;Domain=.jaggaer.com;Path=/;Max-Age=604800;Secure;HttpOnly;SameSite=none;Expires=Tue
+                Dec 02 17:01:13 EST 2025
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+              examples:
+                Success:
+                  description: Success response
+                  value:
+                    accessToken: eyJ0eXAiOiJKV1QiLCJraWQiOiI0N2IxNzg1My1jMDExLTExZj...
+                    accessExpiresIn: 600
+                    refreshToken: 6730or 1158-40bc-475f-8371-194df5176a4f
+                    refreshExpiresIn: 604800
+        "400":
+          description: Invalid request (missing TGT cookie or value)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid Request:
+                  description: TGT cookie or value is required
+                  value:
+                    error: TGT cookie or value is required
+        "401":
+          description: Associated user is locked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Locked:
+                  description: Associated user is locked
+                  value:
+                    error: Locked User
+        "500":
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Unexpected Error:
+                  description: Unexpected error
+                  value:
+                    error: Failed to generate tokens
+  /jwt/public-key:
+    get:
+      tags:
+      - JWT Authentication
+      summary: Get public key
+      description: Returns the RSA public key used for JWT token verification (Base64
+        encoded X.509 format)
+      operationId: getPublicKey
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: Public key retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicKeyResponse'
+              examples:
+                Success:
+                  description: Success response
+                  value:
+                    keyId: 47b17853-c011-11f0-bffa-0affeec4ca27
+                    issuer: ASO-qacurr
+                    keyType: RSA
+                    algorithm: RS256
+                    keySize: 2048
+                    format: X.509
+                    publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ...
+        "500":
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Unexpected Error:
+                  description: Unexpected error
+                  value:
+                    error: Failed to retrieve public key
+  /jwt/refresh:
+    post:
+      tags:
+      - JWT Authentication
+      summary: Refresh JWT tokens
+      description: Generates a new access token and refresh token using a valid refresh
+        token. The ASO JWT refresh token can be sent in a Cookie header or included
+        in the request body.
+      operationId: refreshToken
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Refresh Token
+        in: cookie
+        description: ASO JWT refresh token
+        schema:
+          type: string
+          format: cookie
+        example: ASO_JWT_REFRESH_TOKEN_74254726=ad933685-b1df-48ce-98cb-60e6de6c18ed
+      requestBody:
+        description: ASO JWT refresh token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+            examples:
+              Request Body:
+                description: ASO JWT refresh token
+                value:
+                  refreshToken: e81af5a4-e204-4ee0-ba7e-26f5692d2245
+      responses:
+        "200":
+          description: Tokens refreshed successfully
+          headers:
+            Set-Cookie:
+              description: JWT refresh token
+              style: simple
+              schema:
+                type: string
+                format: cookie
+              example: ASO_JWT_REFRESH_TOKEN_74254726=2dd4e1bc-83ff-4af1-8d49-fce1a5a3e927;Version=1;Comment=ASO-TGT;Domain=.jaggaer.com;Path=/;Max-Age=604800;Secure;HttpOnly;SameSite=none;Expires=Tue
+                Dec 02 17:01:13 EST 2025
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+              examples:
+                Success:
+                  description: Success response
+                  value:
+                    accessToken: eyJ0eXAiOiJKV1QiLCJraWQiOiI0N2IxNzg1My1jMDExLTExZj...
+                    accessExpiresIn: 600
+                    refreshToken: 6730or 1158-40bc-475f-8371-194df5176a4f
+                    refreshExpiresIn: 604800
+        "400":
+          description: Invalid request (missing refresh cookie cookie or value)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid Request:
+                  description: Refresh token cookie or value is required
+                  value:
+                    error: Refresh token cookie or value is required
+        "401":
+          description: Refresh token has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Expired:
+                  description: Refresh token expired
+                  value:
+                    error: Refresh token expired
+        "500":
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Unexpected Error:
+                  description: Unexpected error
+                  value:
+                    error: Failed to refresh token
+  /jwt/validate:
+    post:
+      tags:
+      - JWT Authentication
+      summary: Validate JWT token
+      description: Validates a JWT access token and returns the user information and
+        claims if valid
+      operationId: validateAccessToken
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        description: ASO JWT access token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateTokenRequest'
+            examples:
+              Request Body:
+                description: ASO JWT access token
+                value:
+                  token: eyJ0eXAiOiJKV1QiLCJraWQiOiI0N2IxNzg1My1jMDExLTExZj...
+      responses:
+        "200":
+          description: Token validated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateTokenResponse'
+              examples:
+                Success:
+                  description: Success response
+                  value:
+                    valid: true
+                    userId: 201042
+                    claims:
+                      sub: "201042"
+                      iss: ASO-qacurr
+                      iat: 1764868918
+                      exp: 1764869518
+                      j1UserId: j1-000777
+                      tenantId: "99999999009"
+                      userType: buyer
+                      userName: mnauman@jaggaer.com
+                      userId: 201042
+                      customerHostId: 275
+                      email: mnauman@jaggaer.com
+        "400":
+          description: Invalid request (missing access token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid Request:
+                  description: Access token is required
+                  value:
+                    error: Access token is required
+        "401":
+          description: Access token validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateTokenResponse'
+              examples:
+                Validation Failed:
+                  description: Access token validation failed
+                  value:
+                    valid: false
+                    error: Token validation failed
+        "500":
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Unexpected Error:
+                  description: Unexpected error
+                  value:
+                    error: Failed to validate token
   /oauth2/token:
     post:
       tags:
@@ -94,6 +427,71 @@ paths:
           description: Authorization or authentication issue
 components:
   schemas:
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        accessExpiresIn:
+          type: integer
+          format: int64
+        refreshToken:
+          type: string
+        refreshExpiresIn:
+          type: integer
+          format: int64
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    GenerateTokenRequest:
+      type: object
+      properties:
+        tgt:
+          type: string
+    PublicKeyResponse:
+      type: object
+      properties:
+        keyId:
+          type: string
+        issuer:
+          type: string
+        keyType:
+          type: string
+        algorithm:
+          type: string
+        keySize:
+          type: integer
+          format: int32
+        format:
+          type: string
+        publicKey:
+          type: string
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+    ValidateTokenResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        userId:
+          type: integer
+          format: int64
+        claims:
+          type: object
+          additionalProperties:
+            type: object
+        error:
+          type: string
+    ValidateTokenRequest:
+      type: object
+      properties:
+        token:
+          type: string
     AccessTokenResponse:
       type: object
       properties:
