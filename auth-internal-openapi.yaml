@@ -1,8 +1,3 @@
-HTTP/1.1 200 
-Content-Type: application/yaml;charset=UTF-8
-Transfer-Encoding: chunked
-Date: Thu, 04 Jun 2026 17:51:49 GMT
-
 openapi: 3.0.1
 info:
   title: Authorization Service (Auth)
