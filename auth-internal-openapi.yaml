@@ -1,3 +1,8 @@
+HTTP/1.1 200 
+Content-Type: application/yaml;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Thu, 04 Jun 2026 17:51:49 GMT
+
 openapi: 3.0.1
 info:
   title: Authorization Service (Auth)
@@ -315,19 +320,23 @@ paths:
                   description: Success response
                   value:
                     valid: true
-                    userId: 201042
+                    userId: 155375
                     claims:
-                      sub: "201042"
-                      iss: ASO-qacurr
-                      iat: 1764868918
-                      exp: 1764869518
-                      j1UserId: j1-000777
-                      tenantId: "99999999009"
-                      userType: buyer
-                      userName: mnauman@jaggaer.com
-                      userId: 201042
-                      customerHostId: 275
-                      email: mnauman@jaggaer.com
+                      sub: "155375"
+                      iss: ASO-devcurr
+                      iat: 1780591093
+                      exp: 1780591693
+                      userId: 155375
+                      j1_user_id: j1-0001
+                      username: aseeke+qa_admin@sciquest.com
+                      tenant_id: "42010001007"
+                      customer_host_id: 259
+                      email: aseeke+qa_admin@sciquest.com
+                      firstName: Albert
+                      lastName: Seeke
+                      user_type: admin
+                      user_language: en_US
+                      issuing_application: ASO
         "400":
           description: Invalid request (missing access token)
           content:
