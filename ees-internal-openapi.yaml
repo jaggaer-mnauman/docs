@@ -1,12 +1,12 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: Event Entity Service (EES)
   description: An ASO REST service for event-level entities.
   contact:
     email: bmcmahon@jaggaer.com
   license:
-    name: (c) Jaggaer 2024
-  version: 25.1.0.0
+    name: (c) Jaggaer 2026
+  version: 26.3.0.0
 tags:
 - name: Event Timelines
   description: Event timeline related endpoints
@@ -41,6 +41,22 @@ paths:
           token-keycloak:
             description: Token acquired from keycloak
             value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-API-KEY
         in: header
         description: Api key
@@ -67,7 +83,7 @@ paths:
         schema:
           type: number
       responses:
-        "200":
+        200:
           description: List of supplier event timelines
           content:
             application/json:
@@ -105,7 +121,7 @@ paths:
                     initialBidRequiredDate: null
                     auctionDuration: null
                     auctionDurationUnit: null
-        "400":
+        400:
           description: Bad request
           content:
             application/json:
@@ -118,7 +134,7 @@ paths:
                     statuses:
                       INVALID_EVENT_TYPE:
                       - value: rate_structure
-        "403":
+        403:
           description: Authorization or authentication issue
           content:
             application/json:
@@ -130,6 +146,12 @@ paths:
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
+                      - eventId: "99999"
+                EVENT_INACTIVE:
+                  description: Event is not active
+                  value:
+                    statuses:
+                      EVENT_INACTIVE:
                       - eventId: "99999"
                 USER_PERMISSION_INACTIVE:
                   description: User permission is not active
@@ -161,7 +183,7 @@ paths:
                     statuses:
                       INVITATION_NOT_APPROVED:
                       - invitationId: "123"
-        "404":
+        404:
           description: ASO userId could not be found
           content:
             application/json:
@@ -179,7 +201,10 @@ paths:
       tags:
       - Rates
       summary: GET Account Settings URL
-      description: Return a an ASO URL for all rates filtered by a contract ID.
+      description: |-
+        Return a an ASO URL for all rates filtered by a contract ID.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: getAllRatesUrl
       parameters:
       - name: Accept
@@ -209,6 +234,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -216,6 +257,12 @@ paths:
         schema:
           type: string
       - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
         in: header
         description: J1 user ID
         required: true
@@ -234,7 +281,7 @@ paths:
         schema:
           type: string
       responses:
-        "200":
+        200:
           description: Returns an ASO URL for all rates for a given contract
           content:
             application/json:
@@ -243,7 +290,7 @@ paths:
                   description: Success response
                   value:
                     url: https://qa.aso-qacurr-csweb.va.jaggaer.com/clearview/37557?p=view_all_bids;contract_id=99
-        "400":
+        400:
           description: Bad request
           content:
             application/json:
@@ -256,7 +303,7 @@ paths:
                     statuses:
                       INVALID_EVENT_TYPE:
                       - value: sealed_bid
-        "403":
+        403:
           description: Authorization or authentication issue
           content:
             application/json:
@@ -269,7 +316,7 @@ paths:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
                       - X-USER-ID: 00000999-99
-        "404":
+        404:
           description: ASO customer host alias could not be found for tenant
           content:
             application/json:
@@ -287,7 +334,10 @@ paths:
       tags:
       - Rates
       summary: PATCH Rate Contracts
-      description: Updates one or more rate's contract fields.
+      description: |-
+        Updates one or more rate's contract fields.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: patchRatesContract
       parameters:
       - name: Accept
@@ -324,6 +374,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -331,6 +397,12 @@ paths:
         schema:
           type: string
       - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
         in: header
         description: J1 user ID
         required: true
@@ -387,10 +459,8 @@ paths:
                   contractId: c9999
         required: true
       responses:
-        "207":
-          description: Multi-status response indicating the status of each rateId
-            - it is important to interrogate the response to determine which rateId's
-            were successfully update and which may have failed for a given reason.
+        207:
+          description: Multi-status response indicating the status of each rateId - it is important to interrogate the response to determine which rateId's were successfully update and which may have failed for a given reason.
           content:
             application/json:
               schema:
@@ -403,12 +473,65 @@ paths:
                       SUCCESS:
                       - rateId: "15"
                       - rateId: "1"
+                ENTITY_NOT_FOUND:
+                  description: Rate does not exist
+                  value:
+                    statuses:
+                      ENTITY_NOT_FOUND:
+                      - rateId: "999"
                 MISSING_REQUIRED_FIELD:
                   description: Missing required field or required value is null
                   value:
                     statuses:
                       MISSING_REQUIRED_FIELD:
                       - field: rateIds
+                RATE_ALREADY_EXISTS:
+                  description: Rate already exists
+                  value:
+                    statuses:
+                      RATE_ALREADY_EXISTS:
+                      - itemId: "4"
+                        rateType: rate
+                        supplierId: "1"
+                        rateEffectiveDate: "1663992000000"
+                        rateGroupCode: rgc-1-4
+                        rateExpirationDate: "1695528000000"
+                        rateId: "4"
+                INVALID_DATE_FORMAT:
+                  description: Date value is not 13-digit millisecond epoch time
+                  value:
+                    statuses:
+                      INVALID_DATE_FORMAT:
+                      - field: rateEffectiveDate
+                        value: "1767243600"
+                        rateId: "4"
+                EXPIRATION_DATE_BEFORE_EFFECTIVE_DATE:
+                  description: Rate expiration date occurs before rate effective date
+                  value:
+                    statuses:
+                      EXPIRATION_DATE_BEFORE_EFFECTIVE_DATE:
+                      - rateEffectiveDate: "1767243600000"
+                        rateExpirationDate: "1704085200000"
+                        rateId: "4"
+                INVALID_RATE_STATUS_CHANGE:
+                  description: Past rates cannot be changed to current or future; current rates cannot be changed to future
+                  value:
+                    statuses:
+                      INVALID_RATE_STATUS_CHANGE:
+                      - rateEffectiveDate: "1767243600000"
+                        rateExpirationDate: "1704085200000"
+                        rateId: "4"
+                RATE_DATE_OVERLAP:
+                  description: Rate date range overlaps existing rate or pending rate date range
+                  value:
+                    statuses:
+                      RATE_DATE_OVERLAP:
+                      - rateType: rate
+                        rateIdOverlapped: "32"
+                        rateId: "4"
+                      - rateType: pending rate
+                        rateIdOverlapped: "48"
+                        rateId: "4"
                 COMBINATION:
                   description: Combination response
                   value:
@@ -416,8 +539,8 @@ paths:
                       SUCCESS:
                       - rateId: "1"
                       ENTITY_NOT_FOUND:
-                      - rateId: "99"
-        "400":
+                      - rateId: "999"
+        400:
           description: Missing request body
           content:
             application/json:
@@ -436,7 +559,7 @@ paths:
                     statuses:
                       INVALID_EVENT_TYPE:
                       - value: rate_structure
-        "403":
+        403:
           description: Authorization or authentication issue
           content:
             application/json:
@@ -558,12 +681,14 @@ components:
           description: Response object that can return one or more status codes
           readOnly: true
     RatesContract:
+      required:
+      - rateIds
       type: object
       properties:
         rateIds:
           type: array
           description: List of rate IDs to operate on
-          readOnly: true
+          writeOnly: true
           example:
           - 1
           - 2
@@ -571,26 +696,28 @@ components:
             type: integer
             description: List of rate IDs to operate on
             format: int64
-            readOnly: true
+            writeOnly: true
         contractId:
           maxLength: 255
           type: string
           description: Rate contract ID
+          writeOnly: true
           example: con123
         contractName:
           maxLength: 255
           type: string
           description: Rate contract name
+          writeOnly: true
           example: Contract 123
         rateEffectiveDate:
           type: integer
           description: Rate effective date (epoch time in milliseconds)
           format: int64
-          readOnly: true
+          writeOnly: true
           example: 1480430283000
         rateExpirationDate:
           type: integer
           description: Rate expiration date (epoch time in milliseconds)
           format: int64
-          readOnly: true
+          writeOnly: true
           example: 1480430283000

@@ -17,7 +17,6 @@ window.onload = function() {
         name: "Authorization Service (Auth)"
       }
     ],
-    supportedSubmitMethods: [],
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
@@ -29,7 +28,6 @@ window.onload = function() {
     ],
     layout: "StandaloneLayout"
   });
-
 
   //</editor-fold>
 };

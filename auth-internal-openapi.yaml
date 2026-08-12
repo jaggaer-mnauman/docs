@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: Authorization Service (Auth)
   description: ASO OAuth 2.0 authorization service. The client credentials grant allows
@@ -8,8 +8,8 @@ info:
   contact:
     email: bmcmahon@jaggaer.com
   license:
-    name: (c) Jaggaer 2024
-  version: 25.1.0.0
+    name: (c) Jaggaer 2026
+  version: 26.3.0.0
 tags:
 - name: JWT Authentication
   description: "JWT token generation, validation, and refresh endpoints"
@@ -457,81 +457,199 @@ paths:
 components:
   schemas:
     TokenResponse:
+      required:
+      - accessExpiresIn
+      - accessToken
+      - refreshExpiresIn
+      - refreshToken
       type: object
       properties:
         accessToken:
           type: string
+          description: JWT access token
+          readOnly: true
+          example: eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123...
         accessExpiresIn:
           type: integer
-          format: int64
+          description: Access token expiration time in seconds
+          format: int32
+          readOnly: true
+          example: 900
         refreshToken:
+          maxLength: 255
           type: string
+          description: JWT refresh token
+          readOnly: true
+          example: 2dd4e1bc-83ff-4af1-8d49-fce1a5a3e927
         refreshExpiresIn:
           type: integer
-          format: int64
+          description: Refresh token expiration time in seconds
+          format: int32
+          readOnly: true
+          example: 604800
+      description: Response object containing generated JWT tokens
     ErrorResponse:
       type: object
       properties:
         error:
           type: string
     GenerateTokenRequest:
+      required:
+      - tgt
       type: object
       properties:
         tgt:
+          maxLength: 255
           type: string
+          description: ASO ticket granting ticket
+          example: 2bXgOXRE1i4vZX8XFDf0xJx6cnsKlehpKQW5BxMfpT
+      description: Request object for generating JWT tokens
     PublicKeyResponse:
+      required:
+      - algorithm
+      - format
+      - issuer
+      - keyId
+      - keySize
+      - keyType
+      - publicKey
       type: object
       properties:
         keyId:
+          maxLength: 255
           type: string
+          description: Unique key pair identifier
+          readOnly: true
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
         issuer:
+          maxLength: 255
           type: string
+          description: Token issuer identifier
+          readOnly: true
+          example: ASO-prod
         keyType:
+          maxLength: 10
           type: string
+          description: Cryptographic key type
+          readOnly: true
+          example: RSA
+          enum:
+          - RSA
         algorithm:
+          maxLength: 10
           type: string
+          description: Signing algorithm
+          readOnly: true
+          example: RS256
+          enum:
+          - RS256
+          - RS512
         keySize:
           type: integer
+          description: Key size in bits
           format: int32
+          readOnly: true
+          example: 2048
         format:
+          maxLength: 20
           type: string
+          description: Public key encoding format
+          readOnly: true
+          example: X.509
         publicKey:
           type: string
+          description: Base64-encoded public key
+          readOnly: true
+          example: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...
+      description: Response object containing the public key for JWT verification
     RefreshTokenRequest:
+      required:
+      - refreshToken
       type: object
       properties:
         refreshToken:
+          maxLength: 255
           type: string
+          description: JWT refresh token
+          example: 2dd4e1bc-83ff-4af1-8d49-fce1a5a3e927
+      description: Request object for refreshing JWT tokens
     ValidateTokenResponse:
+      required:
+      - valid
       type: object
       properties:
         valid:
           type: boolean
+          description: Whether the token is valid
+          readOnly: true
+          example: true
         userId:
           type: integer
-          format: int64
+          description: User ID from the token claims
+          format: int32
+          readOnly: true
+          example: 12345
         claims:
           type: object
           additionalProperties:
             type: object
+            description: Token claims map
+            readOnly: true
+          description: Token claims map
+          readOnly: true
         error:
+          maxLength: 500
           type: string
+          description: Error message if token is invalid
+          readOnly: true
+          example: Token has expired
+      description: Response object for token validation
     ValidateTokenRequest:
+      required:
+      - token
       type: object
       properties:
         token:
           type: string
+          description: JWT token to validate
+          example: eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123...
+      description: Request object for validating JWT tokens
     AccessTokenResponse:
+      required:
+      - access_token
+      - expires_in
+      - token_type
       type: object
       properties:
         scope:
+          maxLength: 255
           type: string
+          description: Token scope
+          readOnly: true
+          example: "102"
         access_token:
           type: string
+          description: OAuth 2.0 access token
+          readOnly: true
+          example: eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abc123...
         token_type:
+          maxLength: 20
           type: string
+          description: Token type
+          readOnly: true
+          example: Bearer
+          enum:
+          - Bearer
         expires_in:
           type: integer
-          format: int64
+          description: Token expiration time in seconds
+          format: int32
+          readOnly: true
+          example: 3600
         refresh_token:
+          maxLength: 255
           type: string
+          description: OAuth 2.0 refresh token
+          readOnly: true
+          example: 2dd4e1bc-83ff-4af1-8d49-fce1a5a3e927
+      description: OAuth 2.0 access token response

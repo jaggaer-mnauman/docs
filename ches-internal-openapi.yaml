@@ -1,12 +1,12 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: Customer Host Entity Service (CHES)
   description: An ASO REST service for customer-level entities and event meta-data.
   contact:
     email: bmcmahon@jaggaer.com
   license:
-    name: (c) Jaggaer 2024
-  version: 25.1.0.0
+    name: (c) Jaggaer 2026
+  version: 26.3.0.0
 tags:
 - name: Buyer Users
   description: Buyer user related endpoints
@@ -17,15 +17,19 @@ tags:
 - name: Tenants
   description: Tenant related endpoints
 - name: Utility
-  description: Miscellaneous utilty endpoints
+  description: Miscellaneous utility endpoints
+- name: JAI
+  description: JAI endpoints
 paths:
   /j1/buyerUser:
     get:
       tags:
       - Buyer Users
       summary: GET Buyer User by J1 User ID
-      description: Returns a single instance of an ASO buyer user entity for a given
-        J1 user ID.
+      description: |-
+        Returns a single instance of an ASO buyer user entity for a given J1 user ID.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: getBuyerUserByTenantIdAndJ1UserId
       parameters:
       - name: Accept
@@ -55,6 +59,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -64,6 +84,18 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 User ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
+        in: header
+        description: J1 User ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO Username
         required: true
         schema:
           type: string
@@ -116,11 +148,11 @@ paths:
                       AUTHENTICATION_FORBIDDEN:
                       - X-TENANT-ID: "9999999900911"
                 AUTHENTICATION_FORBIDDEN_2:
-                  description: Missing or invalid J1 user ID
+                  description: Missing or invalid username
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-USER-NAME: mnauman@aggaer.com
     post:
       tags:
       - Buyer Users
@@ -162,6 +194,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -294,8 +342,10 @@ paths:
       tags:
       - Buyer Users
       summary: PATCH Buyer User by J1 User ID
-      description: Updates an ASO buyer user for a given J1 user ID. Any combination
-        of editable fields can be updated.
+      description: |-
+        Updates an ASO buyer user for a given J1 user ID. Any combination of editable fields can be updated.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: patchBuyerUserByJ1UserId
       parameters:
       - name: Accept
@@ -332,6 +382,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -341,6 +407,18 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO Username
         required: true
         schema:
           type: string
@@ -420,6 +498,12 @@ paths:
                     statuses:
                       MISSING_REQUIRED_VALUE:
                       - field: username
+                CANNOT_UPDATE_READONLY_FIELD:
+                  description: Readonly fields cannot be updated
+                  value:
+                    statuses:
+                      CANNOT_UPDATE_READONLY_FIELD:
+                      - field: userId
                 INVALID_USER_TYPE:
                   description: User must be of type 'buyer'
                   value:
@@ -495,11 +579,11 @@ paths:
                       AUTHENTICATION_FORBIDDEN:
                       - X-TENANT-ID: "9999999900911"
                 AUTHENTICATION_FORBIDDEN_2:
-                  description: Missing or invalid J1 user ID
+                  description: Missing or invalid username
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-USER-NAME: mnauman@aggaer.com
   /j1/buyerUser/{username}:
     get:
       tags:
@@ -529,6 +613,22 @@ paths:
           token-keycloak:
             description: Token acquired from keycloak
             value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-API-KEY
         in: header
         description: Api key
@@ -651,6 +751,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -739,6 +855,12 @@ paths:
                     statuses:
                       MISSING_REQUIRED_VALUE:
                       - field: username
+                CANNOT_UPDATE_READONLY_FIELD:
+                  description: Readonly fields cannot be updated
+                  value:
+                    statuses:
+                      CANNOT_UPDATE_READONLY_FIELD:
+                      - field: userId
                 INVALID_USER_TYPE:
                   description: User must be of type 'buyer'
                   value:
@@ -861,6 +983,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1058,6 +1196,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1181,6 +1335,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1424,6 +1594,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1545,8 +1731,10 @@ paths:
       tags:
       - Supplier Users
       summary: GET Supplier User by J1 User ID
-      description: Returns a single instance of ASO supplier user entity for a given
-        J1 user ID.
+      description: |-
+        Returns a single instance of ASO supplier user entity for a given J1 user ID.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: getSupplierUserByTenantIdAndJ1UserId
       parameters:
       - name: Accept
@@ -1576,6 +1764,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1586,6 +1790,16 @@ paths:
         in: header
         description: J1 User ID
         required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
+        in: header
+        description: J1 User ID
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO Username
         schema:
           type: string
       responses:
@@ -1635,11 +1849,11 @@ paths:
                       AUTHENTICATION_FORBIDDEN:
                       - X-TENANT-ID: "9999999900911"
                 AUTHENTICATION_FORBIDDEN_2:
-                  description: Missing or invalid J1 user ID
+                  description: Missing or invalid username
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-USER-NAME: mnauman@aggaer.com
     post:
       tags:
       - Supplier Users
@@ -1681,6 +1895,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1791,8 +2021,10 @@ paths:
       tags:
       - Supplier Users
       summary: PATCH Supplier User by J1 User ID
-      description: Updates an ASO supplier user for a given J1 user ID. Any combination
-        of editable fields can be updated.
+      description: |-
+        Updates an ASO supplier user for a given J1 user ID. Any combination of editable fields can be updated.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: patchSupplierUserByJ1UserId
       parameters:
       - name: Accept
@@ -1829,6 +2061,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -1839,6 +2087,17 @@ paths:
         in: header
         description: J1 user ID
         required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO Username
         schema:
           type: string
       requestBody:
@@ -1909,6 +2168,12 @@ paths:
                     statuses:
                       MISSING_REQUIRED_VALUE:
                       - field: username
+                CANNOT_UPDATE_READONLY_FIELD:
+                  description: Readonly fields cannot be updated
+                  value:
+                    statuses:
+                      CANNOT_UPDATE_READONLY_FIELD:
+                      - field: userId
                 INVALID_USER_TYPE:
                   description: User is not the correct user type
                   value:
@@ -1960,11 +2225,11 @@ paths:
                       AUTHENTICATION_FORBIDDEN:
                       - X-TENANT-ID: "9999999900911"
                 AUTHENTICATION_FORBIDDEN_2:
-                  description: Missing or invalid J1 user ID
+                  description: Missing or invalid username
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-USER-NAME: mnauman@aggaer.com
   /j1/supplierUser/{username}:
     get:
       tags:
@@ -2001,6 +2266,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2114,6 +2395,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2194,6 +2491,12 @@ paths:
                     statuses:
                       MISSING_REQUIRED_VALUE:
                       - field: username
+                CANNOT_UPDATE_READONLY_FIELD:
+                  description: Readonly fields cannot be updated
+                  value:
+                    statuses:
+                      CANNOT_UPDATE_READONLY_FIELD:
+                      - field: userId
                 INVALID_USER_TYPE:
                   description: User is not the correct user type
                   value:
@@ -2292,6 +2595,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2483,6 +2802,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2606,6 +2941,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2685,6 +3036,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2790,7 +3157,10 @@ paths:
       tags:
       - Utility
       summary: GET Account Settings URL
-      description: Returns an ASO URL for user account settings.
+      description: |-
+        Returns an ASO URL for user account settings.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: getAccountSettingsUrl
       parameters:
       - name: Accept
@@ -2820,6 +3190,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2827,6 +3213,12 @@ paths:
         schema:
           type: string
       - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
         in: header
         description: J1 user ID
         required: true
@@ -2866,7 +3258,10 @@ paths:
       tags:
       - Utility
       summary: GET Menu URLs
-      description: Returns a list of ASO menu URLs.
+      description: |-
+        Returns a list of ASO menu URLs.
+
+        NOTE: Only one of `X-J1-USER-ID` or `X-USER-NAME` header is required to specify the user.
       operationId: getMenuUrls
       parameters:
       - name: Accept
@@ -2896,15 +3291,37 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
         required: true
         schema:
           type: string
-      - name: X-USER-ID
+      - name: X-J1-USER-ID
         in: header
         description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO username
         required: true
         schema:
           type: string
@@ -2933,17 +3350,20 @@ paths:
                       AUTHENTICATION_FORBIDDEN:
                       - X-TENANT-ID: "9999999900911"
                 AUTHENTICATION_FORBIDDEN_2:
-                  description: Missing or invalid J1 user ID
+                  description: Missing or invalid username
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-USER-NAME: mnauman@aggaer.com
   /j1/solutionSwitcherUrls:
     get:
       tags:
       - Utility
       summary: GET Solution Switcher URLs
-      description: Returns a list of ASO URLs for use by solution switcher.
+      description: |-
+        Returns a list of ASO URLs for use by solution switcher.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: getSolutionSwitcherUrls
       parameters:
       - name: Accept
@@ -2973,6 +3393,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -2980,6 +3416,12 @@ paths:
         schema:
           type: string
       - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
         in: header
         description: J1 user ID
         required: true
@@ -3031,12 +3473,21 @@ paths:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
                       - X-USER-ID: 00000999-99
+                USER_INACTIVE:
+                  description: User is disabled
+                  value:
+                    statuses:
+                      USER_INACTIVE:
+                      - j1UserId: 00000002-01
   /j1/userDetailUrls:
     get:
       tags:
       - Utility
       summary: GET User Detail URLs
-      description: Returns ASO URLs for user detail.
+      description: |-
+        Returns ASO URLs for user detail.
+
+        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
       operationId: getUserDetailUrls
       parameters:
       - name: Accept
@@ -3066,6 +3517,22 @@ paths:
         schema:
           type: string
         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JD
+          - JI
+        example: JI
       - name: X-TENANT-ID
         in: header
         description: Tenant ID
@@ -3073,6 +3540,12 @@ paths:
         schema:
           type: string
       - name: X-USER-ID
+        in: header
+        description: J1 user ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
         in: header
         description: J1 user ID
         required: true
@@ -3108,6 +3581,89 @@ paths:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
                       - X-USER-ID: 00000999-99
+  /jai/users/permissions:
+    get:
+      tags:
+      - JAI
+      summary: Get JAI user permissions
+      description: |-
+        Returns effective top-level permissions for the authenticated user, organized by category.
+
+        NOTE: Only one of `X-J1-USER-ID` or `X-USER-NAME` header is required to specify the user.
+      operationId: getJAIUserPermissions
+      parameters:
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        required: true
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JAI
+          - JD
+          - JI
+        example: JAI
+      - name: X-TENANT-ID
+        in: header
+        description: Tenant ID
+        required: true
+        schema:
+          type: string
+      - name: X-J1-USER-ID
+        in: header
+        description: J1 user ID
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO username
+        schema:
+          type: string
+      - name: flt
+        in: query
+        description: |-
+          FIQL filter expression. Supported fields: category (=in=), id (==, =in=, == with trailing *).
+          Example: category=in=(JAI,AGENT_REGISTRATION);id==jai:*
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns the user's effective permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermissionsResponse'
+        "400":
+          description: Invalid request parameters or filter syntax
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+        "401":
+          description: Authentication required
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "403":
+          description: Access denied
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "404":
+          description: User not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 components:
   schemas:
     BuyerUser:
@@ -3167,7 +3723,6 @@ components:
         eventsRole:
           type: string
           description: RFX and auction events role
-          readOnly: true
           example: Event Creator
           enum:
           - Event Creator
@@ -3177,7 +3732,6 @@ components:
         ratesRole:
           type: string
           description: Rate Manager rate structure role
-          readOnly: true
           example: Rate Structure Creator
           enum:
           - Rate Structure Creator
@@ -3435,5 +3989,87 @@ components:
         j1HomeUrl:
           type: string
           description: J1 home URL
-          readOnly: true
           example: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
+    Permission:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+        displayName:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+    UserPermissionsResponse:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    ValidationErrorItem:
+      type: object
+      properties:
+        code:
+          type: string
+        detail:
+          type: string
+        in:
+          type: string
+        pointer:
+          type: string
+        parameter:
+          type: string
+        rejectedValue:
+          type: string
+    ValidationProblem:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationErrorItem'
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: object
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationErrorItem'
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: object
