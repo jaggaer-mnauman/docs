@@ -3592,6 +3592,33 @@ paths:
         NOTE: Only one of `X-J1-USER-ID` or `X-USER-NAME` header is required to specify the user.
       operationId: getJAIUserPermissions
       parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-API-KEY
+        in: header
+        description: Api key
+        required: true
+        schema:
+          type: string
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
       - name: X-JAGGAER-ORIGINATION
         in: header
         description: Jaggaer origination header
@@ -3629,8 +3656,9 @@ paths:
       - name: flt
         in: query
         description: |-
-          FIQL filter expression. Supported fields: category (=in=), id (==, =in=, == with trailing *).
-          Example: category=in=(JAI,AGENT_REGISTRATION);id==jai:*
+          FIQL filter expression. Supported fields: `category` (`=in=`), `id` (`==`, `=in=`, `==` with trailing `*`).
+
+          Example: `category=in=(JAI,AGENT_REGISTRATION);id==jai:*`
         schema:
           type: string
       responses:
@@ -3640,30 +3668,84 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserPermissionsResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    permissions:
+                    - id: jai:view-jai
+                      category: JAI
+                      displayName: View JAI
+                    - id: jai:chat-with-data
+                      category: JAI
+                      displayName: Chat with Data
+                    - id: jai:chat-with-live-agent
+                      category: JAI
+                      displayName: Chat with Live Agent
+                    - id: jai:create-support-tickets
+                      category: JAI
+                      displayName: Create Support Tickets
+                    - id: jai:administrator
+                      category: JAI
+                      displayName: Administrator
+                    - id: jai:manage-custom-documents
+                      category: JAI
+                      displayName: Manage Custom Documents
         "400":
           description: Invalid request parameters or filter syntax
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ValidationProblem'
-        "401":
-          description: Authentication required
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                INVALID_FILTER:
+                  description: Invalid filter value
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: Invalid filter expression
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: INVALID_FILTER
+                      detail: "Invalid filter condition syntax: all"
+                      in: query
+                      parameter: flt
+                      rejectedValue: all
         "403":
           description: Access denied
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-        "404":
-          description: User not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                FORBIDDEN_1:
+                  description: Invalid user ID
+                  value:
+                    type: urn:jaggaer:problem:forbidden
+                    title: Access denied
+                    status: 403
+                    detail: Invalid user ID xxx
+                    instance: urn:jaggaer:problem-instance:48df6a2c-de9e-45fc-a295-4d457a26604a
+                    code: FORBIDDEN
+                FORBIDDEN_2:
+                  description: Invalid tenant ID
+                  value:
+                    type: urn:jaggaer:problem:forbidden
+                    title: Access denied
+                    status: 403
+                    detail: Invalid tenant ID xxx
+                    instance: urn:jaggaer:problem-instance:97e3ec1b-6214-4b69-a8fd-a05ab99eae36
+                    code: FORBIDDEN
+                FORBIDDEN_3:
+                  description: Invalid or missing X-ORIGINATION header
+                  value:
+                    type: urn:jaggaer:problem:forbidden
+                    title: Access denied
+                    status: 403
+                    detail: Invalid or missing request header X-JAGGAER-ORIGINATION
+                    instance: urn:jaggaer:problem-instance:639507f0-9abc-468b-9c43-ce429078a4cc
+                    code: FORBIDDEN
 components:
   schemas:
     BuyerUser:
