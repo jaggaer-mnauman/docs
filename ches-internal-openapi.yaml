@@ -3720,22 +3720,22 @@ paths:
                 $ref: '#/components/schemas/ProblemDetail'
               examples:
                 FORBIDDEN_1:
-                  description: Invalid user ID
+                  description: Missing or invalid user ID or username
                   value:
                     type: urn:jaggaer:problem:forbidden
                     title: Access denied
                     status: 403
-                    detail: Invalid user ID xxx
-                    instance: urn:jaggaer:problem-instance:48df6a2c-de9e-45fc-a295-4d457a26604a
+                    detail: Missing or invalid user ID or username
+                    instance: urn:jaggaer:problem-instance:0f7af1a4-d843-4e30-8fef-f3b58fbbe42c
                     code: FORBIDDEN
                 FORBIDDEN_2:
-                  description: Invalid tenant ID
+                  description: Missing or invalid tenant ID
                   value:
                     type: urn:jaggaer:problem:forbidden
                     title: Access denied
                     status: 403
-                    detail: Invalid tenant ID xxx
-                    instance: urn:jaggaer:problem-instance:97e3ec1b-6214-4b69-a8fd-a05ab99eae36
+                    detail: Missing or invalid tenant ID
+                    instance: urn:jaggaer:problem-instance:b905d6c0-c2d5-4366-b9c7-5de22609d038
                     code: FORBIDDEN
                 FORBIDDEN_3:
                   description: Invalid or missing X-ORIGINATION header
@@ -3743,8 +3743,8 @@ paths:
                     type: urn:jaggaer:problem:forbidden
                     title: Access denied
                     status: 403
-                    detail: Invalid or missing request header X-JAGGAER-ORIGINATION
-                    instance: urn:jaggaer:problem-instance:639507f0-9abc-468b-9c43-ce429078a4cc
+                    detail: Missing or invalid request header X-JAGGAER-ORIGINATION
+                    instance: urn:jaggaer:problem-instance:57b37620-ed2e-45fa-b7f9-51901229be0a
                     code: FORBIDDEN
 components:
   schemas:
