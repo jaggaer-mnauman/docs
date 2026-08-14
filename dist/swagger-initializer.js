@@ -5,16 +5,16 @@ window.onload = function() {
   window.ui = SwaggerUIBundle({
     urls: [
       {
+        url: "auth-internal-openapi.yaml",
+        name: "Authorization Service (Auth)"
+      },
+      {
         url: "ches-internal-openapi.yaml",
         name: "Customer Host Entity Service (CHES)"
       },
       {
         url: "ees-internal-openapi.yaml",
         name: "Event Entity Service (EES)"
-      },
-      {
-        url: "auth-internal-openapi.yaml",
-        name: "Authorization Service (Auth)"
       }
     ],
     dom_id: '#swagger-ui',
