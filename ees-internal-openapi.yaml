@@ -259,13 +259,11 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: eventId
@@ -399,13 +397,11 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: eventId

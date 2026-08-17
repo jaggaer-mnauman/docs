@@ -84,19 +84,16 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 User ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 User ID
-        required: true
         schema:
           type: string
       - name: X-USER-NAME
         in: header
         description: ASO Username
-        required: true
         schema:
           type: string
       responses:
@@ -407,19 +404,16 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-USER-NAME
         in: header
         description: ASO Username
-        required: true
         schema:
           type: string
       requestBody:
@@ -1789,7 +1783,6 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 User ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
@@ -2086,13 +2079,11 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-USER-NAME
@@ -3215,13 +3206,11 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       responses:
@@ -3316,13 +3305,11 @@ paths:
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-USER-NAME
         in: header
         description: ASO username
-        required: true
         schema:
           type: string
       responses:
@@ -3363,7 +3350,7 @@ paths:
       description: |-
         Returns a list of ASO URLs for use by solution switcher.
 
-        NOTE: Only one of `X-USER-ID` or `X-J1-USER-ID` header is required to specify the J1 user ID.
+        NOTE: Only one of `X-J1-USER-ID` or `X-USER-NAME` header is required to specify the user.
       operationId: getSolutionSwitcherUrls
       parameters:
       - name: Accept
@@ -3418,13 +3405,16 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
+        schema:
+          type: string
+      - name: X-USER-NAME
+        in: header
+        description: ASO username
         schema:
           type: string
       responses:
@@ -3542,13 +3532,11 @@ paths:
       - name: X-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       - name: X-J1-USER-ID
         in: header
         description: J1 user ID
-        required: true
         schema:
           type: string
       responses:
