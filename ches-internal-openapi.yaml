@@ -3726,7 +3726,7 @@ paths:
                     instance: urn:jaggaer:problem-instance:b905d6c0-c2d5-4366-b9c7-5de22609d038
                     code: FORBIDDEN
                 FORBIDDEN_3:
-                  description: Invalid or missing X-ORIGINATION header
+                  description: Invalid or missing X-JAGGAER-ORIGINATION header
                   value:
                     type: urn:jaggaer:problem:forbidden
                     title: Access denied
