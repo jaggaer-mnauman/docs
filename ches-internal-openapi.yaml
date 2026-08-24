@@ -3651,7 +3651,7 @@ paths:
           type: string
       responses:
         "200":
-          description: Returns the user's effective permissions
+          description: The granted permissions for the requested user
           content:
             application/json:
               schema:
@@ -3680,19 +3680,32 @@ paths:
                       category: JAI
                       displayName: Manage Custom Documents
         "400":
-          description: Invalid request parameters or filter syntax
+          description: Request validation failed; One or more values were invalid
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ValidationProblem'
               examples:
+                INVALID_HEADER:
+                  description: Missing or invalid request header
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: INVALID_HEADER
+                      detail: Missing or invalid request header X-J1-USER-ID
+                      in: header
+                      parameter: X-J1-USER-ID
                 INVALID_FILTER:
                   description: Invalid filter value
                   value:
                     type: urn:jaggaer:problem:validation
                     title: Request validation failed
                     status: 400
-                    detail: Invalid filter expression
+                    detail: One or more request values violated validation constraints
                     code: VALIDATION_FAILED
                     errors:
                     - code: INVALID_FILTER
@@ -3700,40 +3713,45 @@ paths:
                       in: query
                       parameter: flt
                       rejectedValue: all
-        "403":
-          description: Access denied
+        "401":
+          description: Authentication required; The request could not be authenticated
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
               examples:
-                FORBIDDEN_1:
-                  description: Missing or invalid user ID or username
+                UNAUTHORIZED:
+                  description: Missing or invalid authorization header
+                  value:
+                    type: urn:jaggaer:problem:authorization
+                    title: Authentication required
+                    status: 401
+                    detail: Bearer token was rejected or was not valid.
+                    instance: urn:jaggaer:problem-instance:69a26ebf-65da-43f6-9bdd-e012fb4fdf4e
+                    code: AUTHORIZATION_FAILURE
+        "403":
+          description: Access denied; The authenticated user is not permitted to perform
+            the requested action
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                FORBIDDEN_USER:
+                  description: User does not have required role or permission
                   value:
                     type: urn:jaggaer:problem:forbidden
                     title: Access denied
                     status: 403
-                    detail: Missing or invalid user ID or username
-                    instance: urn:jaggaer:problem-instance:0f7af1a4-d843-4e30-8fef-f3b58fbbe42c
+                    detail: User's customer host does not have JAI enabled for user
+                      type 'supplier'
+                    instance: urn:jaggaer:problem-instance:d3aab233-ed0c-44ec-9c08-0738a601cc6f
                     code: FORBIDDEN
-                FORBIDDEN_2:
-                  description: Missing or invalid tenant ID
+                FORBIDDEN_KEY:
+                  description: Missing or invalid API key (returned directly from
+                    AWS API gateway)
                   value:
-                    type: urn:jaggaer:problem:forbidden
-                    title: Access denied
-                    status: 403
-                    detail: Missing or invalid tenant ID
-                    instance: urn:jaggaer:problem-instance:b905d6c0-c2d5-4366-b9c7-5de22609d038
-                    code: FORBIDDEN
-                FORBIDDEN_3:
-                  description: Invalid or missing X-JAGGAER-ORIGINATION header
-                  value:
-                    type: urn:jaggaer:problem:forbidden
-                    title: Access denied
-                    status: 403
-                    detail: Missing or invalid request header X-JAGGAER-ORIGINATION
-                    instance: urn:jaggaer:problem-instance:57b37620-ed2e-45fa-b7f9-51901229be0a
-                    code: FORBIDDEN
+                    message: Forbidden
 components:
   schemas:
     BuyerUser:
