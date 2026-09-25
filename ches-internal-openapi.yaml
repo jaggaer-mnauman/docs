@@ -18,6 +18,9 @@ tags:
   description: Tenant related endpoints
 - name: Utility
   description: Miscellaneous utility endpoints
+- name: JAI Agent Registration
+  description: APIs that allow the AgentOS team to register/activate AgentOS agents
+    for a core application customer (tenant)
 - name: JAI
   description: JAI endpoints
 paths:
@@ -170,7 +173,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -358,7 +361,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -724,7 +727,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -1867,7 +1870,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -2033,7 +2036,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -2365,7 +2368,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -3006,7 +3009,7 @@ paths:
         required: true
         schema:
           type: string
-        example: application/x-www-form-urlencoded
+        example: application/json
       - name: Authorization
         in: header
         description: ASO or keycloak bearer access token.
@@ -3241,7 +3244,7 @@ paths:
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-J1-USER-ID: 00000999-99
   /j1/menuUrls:
     get:
       tags:
@@ -3462,7 +3465,7 @@ paths:
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-J1-USER-ID: 00000999-99
                 USER_INACTIVE:
                   description: User is disabled
                   value:
@@ -3568,7 +3571,671 @@ paths:
                   value:
                     statuses:
                       AUTHENTICATION_FORBIDDEN:
-                      - X-USER-ID: 00000999-99
+                      - X-J1-USER-ID: 00000999-99
+  /jai/agent-registrations:
+    get:
+      tags:
+      - JAI Agent Registration
+      summary: List Agent Registrations
+      description: Returns the list of AgentOS agents that have been registered for
+        the tenant identified by the X-TENANT-ID header.
+      operationId: listAgentRegistrations
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        required: true
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JAI
+          - JD
+          - JI
+        example: DML
+      - name: X-TENANT-ID
+        in: header
+        description: Identifies the customer that the API call is being executed for
+          using their Jaggaer One tenant id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Agent registrations were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAgentRegistrationsResponse'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    registeredAgents:
+                    - id: a3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d
+                      integrationCodeId: ASMT_SUMMARIZATION
+                      defaultName: Assessment Summarization
+                      defaultDescription: Summarizes assessment results and key insights.
+                      translatedStrings:
+                      - localeCode: en_US
+                        name: Assessment Summarization
+                        description: Summarizes assessment results and key insights.
+                      - localeCode: fr_FR
+                        name: Résumé de l'évaluation
+                        description: Résume les résultats de l'évaluation et les points
+                          clés.
+                      supportsUserPermissionMgmt: true
+        "400":
+          description: Request validation failed; One or more values were invalid
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+              examples:
+                INVALID_HEADER:
+                  description: Missing or invalid request header
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: INVALID_HEADER
+                      detail: Missing or invalid request header X-TENANT-ID
+                      in: header
+                      parameter: X-TENANT-ID
+        "401":
+          description: Authentication required; The request could not be authenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                UNAUTHORIZED:
+                  description: Missing or invalid authorization header
+                  value:
+                    type: urn:jaggaer:problem:authorization
+                    title: Authentication required
+                    status: 401
+                    detail: Bearer token was rejected or was not valid.
+                    instance: urn:jaggaer:problem-instance:69a26ebf-65da-43f6-9bdd-e012fb4fdf4e
+                    code: AUTHORIZATION_FAILURE
+        "403":
+          description: Access denied
+          content:
+            application/problem+json:
+              examples:
+                FORBIDDEN_KEY:
+                  description: Missing or invalid API key (returned directly from
+                    AWS API gateway)
+                  value:
+                    message: Forbidden
+        "500":
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                INTERNAL_ERROR:
+                  description: Internal server error; An unexpected error occurred
+                    on the server
+                  value:
+                    type: urn:jaggaer:problem:internal-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred.
+                    instance: urn:jaggaer:problem-instance:c8579f34-6047-4ea4-949f-c63b01d5339e
+                    code: INTERNAL_ERROR
+    post:
+      tags:
+      - JAI Agent Registration
+      summary: Create Agent Registration
+      description: Registers a new AgentOS agent as activated for the tenant identified
+        by the X-TENANT-ID header.
+      operationId: createAgentRegistration
+      parameters:
+      - name: Accept
+        in: header
+        description: Accept
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        required: true
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JAI
+          - JD
+          - JI
+        example: DML
+      - name: X-TENANT-ID
+        in: header
+        description: Identifies the customer that the API call is being executed for
+          using their Jaggaer One tenant id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: AgentOS agent to be registered/activated for a tenant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRegistration'
+            examples:
+              REQUEST_BODY:
+                description: AgentOS agent to register/activate
+                value:
+                  id: a3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d
+                  integrationCodeId: ASMT_SUMMARIZATION
+                  defaultName: Assessment Summarization
+                  defaultDescription: Summarizes assessment results and key insights.
+                  supportsUserPermissionMgmt: true
+                  translatedStrings:
+                  - localeCode: en_US
+                    name: Assessment Summarization
+                    description: Summarizes assessment results and key insights.
+                  - localeCode: fr_FR
+                    name: Résumé de l'évaluation
+                    description: Résume les résultats de l'évaluation et les points
+                      clés.
+        required: true
+      responses:
+        "201":
+          description: Agent registration was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentRegistration'
+              examples:
+                SUCCESS:
+                  description: Success response
+                  value:
+                    id: a3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d
+                    integrationCodeId: ASMT_SUMMARIZATION
+                    defaultName: Assessment Summarization
+                    defaultDescription: Summarizes assessment results and key insights.
+                    supportsUserPermissionMgmt: true
+                    translatedStrings:
+                    - localeCode: en_US
+                      name: Assessment Summarization
+                      description: Summarizes assessment results and key insights.
+                    - localeCode: fr_FR
+                      name: Résumé de l'évaluation
+                      description: Résume les résultats de l'évaluation et les points
+                        clés.
+        "400":
+          description: Request validation failed; One or more values were invalid
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+              examples:
+                INVALID_HEADER:
+                  description: Missing or invalid request header
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: INVALID_HEADER
+                      detail: Missing or invalid request header X-TENANT-ID
+                      in: header
+                      parameter: X-TENANT-ID
+                NOT_UNIQUE:
+                  description: Agent already exists for the tenant
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: NOT_UNIQUE
+                      detail: An agent registration with id 'a3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d'
+                        already exists for this tenant
+                      in: body
+                      pointer: /id
+                      rejectedValue: a3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d
+                REQUIRED:
+                  description: Required value is missing
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: REQUIRED
+                      detail: defaultName is required
+                      in: body
+                      pointer: defaultName
+        "401":
+          description: Authentication required; The request could not be authenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                UNAUTHORIZED:
+                  description: Missing or invalid authorization header
+                  value:
+                    type: urn:jaggaer:problem:authorization
+                    title: Authentication required
+                    status: 401
+                    detail: Bearer token was rejected or was not valid.
+                    instance: urn:jaggaer:problem-instance:69a26ebf-65da-43f6-9bdd-e012fb4fdf4e
+                    code: AUTHORIZATION_FAILURE
+        "403":
+          description: Access denied
+          content:
+            application/problem+json:
+              examples:
+                FORBIDDEN_KEY:
+                  description: Missing or invalid API key (returned directly from
+                    AWS API gateway)
+                  value:
+                    message: Forbidden
+        "500":
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                INTERNAL_ERROR:
+                  description: Internal server error; An unexpected error occurred
+                    on the server
+                  value:
+                    type: urn:jaggaer:problem:internal-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred.
+                    instance: urn:jaggaer:problem-instance:c8579f34-6047-4ea4-949f-c63b01d5339e
+                    code: INTERNAL_ERROR
+  /jai/agent-registrations/{id}:
+    put:
+      tags:
+      - JAI Agent Registration
+      summary: Update Agent Registration by Id
+      description: "Fully replaces the mutable attributes (defaultName, defaultDescription,\
+        \ and translatedStrings) of an existing agent registration."
+      operationId: updateAgentRegistrationById
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Content-Type
+        required: true
+        schema:
+          type: string
+        example: application/json
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        required: true
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JAI
+          - JD
+          - JI
+        example: DML
+      - name: X-TENANT-ID
+        in: header
+        description: Identifies the customer that the API call is being executed for
+          using their Jaggaer One tenant id
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Globally unique identifier of the AgentOS agent registration
+          to update
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: AgentOS agent information to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRegistration'
+            examples:
+              REQUEST_BODY:
+                description: AgentOS agent information to update
+                value:
+                  defaultName: Assessment Summarization - Updated
+                  defaultDescription: Updated description for assessment summarization.
+                  translatedStrings:
+                  - localeCode: en
+                    name: Assessment Summarization - Updated
+                    description: Updated description.
+                  - localeCode: en_US
+                    name: Assessment Summarization - Updated
+                    description: Updated description.
+        required: true
+      responses:
+        "204":
+          description: Agent registration was updated successfully
+        "400":
+          description: Request validation failed; One or more values were invalid
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+              examples:
+                INVALID_HEADER:
+                  description: Missing or invalid request header
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: INVALID_HEADER
+                      detail: Missing or invalid request header X-TENANT-ID
+                      in: header
+                      parameter: X-TENANT-ID
+                REQUIRED:
+                  description: Required value is missing
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: REQUIRED
+                      detail: defaultName is required
+                      in: body
+                      pointer: defaultName
+        "401":
+          description: Authentication required; The request could not be authenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                UNAUTHORIZED:
+                  description: Missing or invalid authorization header
+                  value:
+                    type: urn:jaggaer:problem:authorization
+                    title: Authentication required
+                    status: 401
+                    detail: Bearer token was rejected or was not valid.
+                    instance: urn:jaggaer:problem-instance:69a26ebf-65da-43f6-9bdd-e012fb4fdf4e
+                    code: AUTHORIZATION_FAILURE
+        "403":
+          description: Access denied
+          content:
+            application/problem+json:
+              examples:
+                FORBIDDEN_KEY:
+                  description: Missing or invalid API key (returned directly from
+                    AWS API gateway)
+                  value:
+                    message: Forbidden
+        "404":
+          description: Resource not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                NOT_FOUND:
+                  description: Resource not found
+                  value:
+                    type: urn:jaggaer:problem:not-found
+                    title: Resource not found
+                    status: 404
+                    detail: Agent registration not found for id 'c3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d'
+                    instance: urn:jaggaer:problem-instance:062758a5-0590-4412-8e4d-2abd46425ab3
+                    code: NOT_FOUND
+        "500":
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                INTERNAL_ERROR:
+                  description: Internal server error; An unexpected error occurred
+                    on the server
+                  value:
+                    type: urn:jaggaer:problem:internal-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred.
+                    instance: urn:jaggaer:problem-instance:c8579f34-6047-4ea4-949f-c63b01d5339e
+                    code: INTERNAL_ERROR
+    delete:
+      tags:
+      - JAI Agent Registration
+      summary: Delete Agent Registration by Id
+      description: Removes the agent registration identified by id for the tenant
+        identified by the X-TENANT-ID header.
+      operationId: deleteAgentRegistrationById
+      parameters:
+      - name: Authorization
+        in: header
+        description: ASO or keycloak bearer access token.
+        required: true
+        schema:
+          type: string
+        examples:
+          token-aso:
+            description: Token acquired from ASO Auth service
+            value: 412ade3d-5dfc-4a72-99bf-999999999999
+          token-keycloak:
+            description: Token acquired from keycloak
+            value: eyJhbGciOiJSUzI1lmnOPqR5cCIgOiAiSldUIiwia2lkIiA6ICJob2tSTXJ2LTNLVjdKekNqZkhCVDZkekxGYm1TUnI5WUlzT2RfQmRDRzBZIn0.eyJleHAiOjE3NDEzNzk3ODIsImlhdCI6MTc0MTM3OTQ4MiwianRpIjoiZDUzN2I2OGItOTZjMS00M2U1LWIxY2QtMTAwNTYwOTdjYTlkIiwiaXNzIjoiaHR0cHM6Ly9qMXAtaW50MS1nLWtleWNsb2FrLmRlLmphZ2dhZXIuY29tL2F1dGgvcmVhbG1zL2oxcC1hcHBzIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjAxNjY2ODA3LTBiNTEtNGRiOC1hYjk1LTdjZWY2NmIxN2QyYSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFzby1pbnQxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50Iiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwicHJpdmlsZWdlcyI6IlRFTkFOVC9SRUFELEFQUF9URU5BTlQvUkVBRCxQSFlTX0lOU1RBTExBVElPTi9SRUFELE1VTFRJVEVOQU5UX0VOVi9SRUFELFJFR0lPTi9SRUFELFNVUFBMSUVSSURFTlRJVFkvV1JJVEUsU1VQUExJRVJJREVOVElUWS9SRUFELEVWRU5UX05PVElGSUNBVElPTi9SRUFELEVWRU5UX05PVElGSUNBVElPTi9XUklURSxGVU5DVElPTlMvUkVBRCxGVU5DVElPTlMvV1JJVEUiLCJjbGllbnRIb3N0IjoiMTAuNjQuMC40NCIsImNsaWVudElkIjoiYXNvLWludDEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1hc28taW50MSIsImNsaWVudEFkZHJlc3MiOiIxMC42NC4wLjQ0In0.VbmqcpXQSzSCx1ySUqUSEfH-j_r-2qEmbnO7tzrqyJdauF-U1_Ug2SD0zPbbbsp-8006hzlvGUPvoQCJpIldUT57FCPAk4ZbQDfCKLKv3O0U1P1PpeXtPWKKISZr3q3o1CA15-OEHYLcFLpJcwN9lchMEygniOOcz8UMecRWqCVLluXMFh1igSQQNFLDEbe7TpVettsfvcb72H5upQsv53UNSnz0eBojJl5oXx19JHnBQol86xqHIeRnNhgKPY_PPw-MCsEDVEW8qZ-m6avwxBZmRlijCxDZ_1z0dz-u6V2MN4NHiu-V5xhrmAd-nYXrUHilB260_Aumq0sZKgeW5w
+      - name: X-JAGGAER-ORIGINATION
+        in: header
+        description: Jaggaer origination header
+        required: true
+        schema:
+          type: string
+          enum:
+          - Analytics
+          - ASO
+          - CAI
+          - DML
+          - J1P
+          - J1P_GATEWAY
+          - JA
+          - JAI
+          - JD
+          - JI
+        example: DML
+      - name: X-TENANT-ID
+        in: header
+        description: Identifies the customer that the API call is being executed for
+          using their Jaggaer One tenant id
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Globally unique identifier of the AgentOS agent registration
+          to delete
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Agent registration was deleted successfully
+        "400":
+          description: Request validation failed; One or more values were invalid
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+              examples:
+                INVALID_HEADER:
+                  description: Missing or invalid request header
+                  value:
+                    type: urn:jaggaer:problem:validation
+                    title: Request validation failed
+                    status: 400
+                    detail: One or more request values violated validation constraints
+                    code: VALIDATION_FAILED
+                    errors:
+                    - code: INVALID_HEADER
+                      detail: Missing or invalid request header X-TENANT-ID
+                      in: header
+                      parameter: X-TENANT-ID
+        "401":
+          description: Authentication required; The request could not be authenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                UNAUTHORIZED:
+                  description: Missing or invalid authorization header
+                  value:
+                    type: urn:jaggaer:problem:authorization
+                    title: Authentication required
+                    status: 401
+                    detail: Bearer token was rejected or was not valid.
+                    instance: urn:jaggaer:problem-instance:69a26ebf-65da-43f6-9bdd-e012fb4fdf4e
+                    code: AUTHORIZATION_FAILURE
+        "403":
+          description: Access denied
+          content:
+            application/problem+json:
+              examples:
+                FORBIDDEN_KEY:
+                  description: Missing or invalid API key (returned directly from
+                    AWS API gateway)
+                  value:
+                    message: Forbidden
+        "404":
+          description: Resource not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                NOT_FOUND:
+                  description: Resource not found
+                  value:
+                    type: urn:jaggaer:problem:not-found
+                    title: Resource not found
+                    status: 404
+                    detail: Agent registration not found for id 'c3f1c2d4-5b6e-4a7f-9c8d-1e2f3a4b5c6d'
+                    instance: urn:jaggaer:problem-instance:062758a5-0590-4412-8e4d-2abd46425ab3
+                    code: NOT_FOUND
+        "500":
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+              examples:
+                INTERNAL_ERROR:
+                  description: Internal server error; An unexpected error occurred
+                    on the server
+                  value:
+                    type: urn:jaggaer:problem:internal-error
+                    title: Internal server error
+                    status: 500
+                    detail: An unexpected error occurred.
+                    instance: urn:jaggaer:problem-instance:c8579f34-6047-4ea4-949f-c63b01d5339e
+                    code: INTERNAL_ERROR
   /jai/users/permissions:
     get:
       tags:
@@ -3578,7 +4245,7 @@ paths:
         Returns effective top-level permissions for the authenticated user, organized by category.
 
         NOTE: Only one of `X-J1-USER-ID` or `X-USER-NAME` header is required to specify the user.
-      operationId: getJAIUserPermissions
+      operationId: getJaiUserPermissions
       parameters:
       - name: Accept
         in: header
@@ -3655,7 +4322,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserPermissionsResponse'
+                $ref: '#/components/schemas/JaiUserPermissionsResponse'
               examples:
                 SUCCESS:
                   description: Success response
@@ -4078,26 +4745,32 @@ components:
           type: string
           description: J1 home URL
           example: https://prep-reg01.j1p.jaggaer.com/buyer-redirect/buyer/20010002170
-    Permission:
+    AgentRegistration:
       type: object
       properties:
         id:
           type: string
-        category:
+        integrationCodeId:
           type: string
-        displayName:
+        defaultName:
           type: string
-        metadata:
-          type: object
-          additionalProperties:
-            type: object
-    UserPermissionsResponse:
-      type: object
-      properties:
-        permissions:
+        defaultDescription:
+          type: string
+        translatedStrings:
           type: array
           items:
-            $ref: '#/components/schemas/Permission'
+            $ref: '#/components/schemas/TranslatedString'
+        supportsUserPermissionMgmt:
+          type: boolean
+    TranslatedString:
+      type: object
+      properties:
+        localeCode:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
     ValidationErrorItem:
       type: object
       properties:
@@ -4161,3 +4834,41 @@ components:
           type: object
           additionalProperties:
             type: object
+    ListAgentRegistrationsResponse:
+      type: object
+      properties:
+        registeredAgents:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentRegistration'
+    UpdateAgentRegistrationRequest:
+      type: object
+      properties:
+        defaultName:
+          type: string
+        defaultDescription:
+          type: string
+        translatedStrings:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranslatedString'
+    JaiPermission:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+        displayName:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+    JaiUserPermissionsResponse:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JaiPermission'
